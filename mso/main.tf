@@ -1,59 +1,52 @@
 terraform {
-  backend "remote" {
-    hostname = "app.terraform.io"
-    organization = "mel-ciscolabs-com"
-    workspaces {
-      name = "terraform-cloud-aci-demo"
-    }
-  }
   required_providers {
     mso = {
       source = "CiscoDevNet/mso"
-      version = "~> 0.1.4"
+      version = "~> 0.1.5"
     }
-    vault = {
-      source = "hashicorp/vault"
-      version = "2.18.0"
-    }
+    # vault = {
+    #   source = "hashicorp/vault"
+    #   version = "2.18.0"
+    # }
   }
 }
-
-
-### Vault Provider ###
-## Username & Password provided by Workspace Variable
-variable vault_username {}
-variable vault_password {
-  sensitive = true
-}
-
-provider "vault" {
-  address = "https://Hashi-Vault-1F899TQ4290I3-1824033843.ap-southeast-2.elb.amazonaws.com"
-  skip_tls_verify = true
-  auth_login {
-    path = "auth/userpass/login/${var.vault_username}"
-    parameters = {
-      password = var.vault_password
-    }
-  }
-}
-
-data "vault_generic_secret" "aws-mso" {
-  path = "kv/aws-mso"
-}
-
+#
+#
+# ### Vault Provider ###
+# ## Username & Password provided by Workspace Variable
+# variable vault_username {}
+# variable vault_password {
+#   sensitive = true
+# }
+#
+# provider "vault" {
+#   address = "https://Hashi-Vault-1F899TQ4290I3-1824033843.ap-southeast-2.elb.amazonaws.com"
+#   skip_tls_verify = true
+#   auth_login {
+#     path = "auth/userpass/login/${var.vault_username}"
+#     parameters = {
+#       password = var.vault_password
+#     }
+#   }
+# }
+#
+# data "vault_generic_secret" "aws-mso" {
+#   path = "kv/aws-mso"
+# }
+#
 ### ACI Provider
-provider "mso" {
-  username = data.vault_generic_secret.aws-mso.data["username"]
-  password = data.vault_generic_secret.aws-mso.data["password"]
-  url      = "https://aws-syd-ase-n1.mel.ciscolabs.com/mso/"
-  insecure = true
-}
-
+# provider "mso" {
+#   username = data.vault_generic_secret.aws-mso.data["username"]
+#   password = data.vault_generic_secret.aws-mso.data["password"]
+#   url      = "https://aws-syd-ase-n1.mel.ciscolabs.com/mso/"
+#   insecure = true
+# }
+#
 ### Workaround Destory Variable
 
-variable "removeSites" {
-  default = true
-}
+# variable "removeSites" {
+#   default = true
+# }
 
 ### Shared Data Sources ###
 data "mso_tenant" "Production" {
@@ -69,29 +62,20 @@ data "mso_site" "AZURE-MEL" {
   name  = "AZURE-MEL"
 }
 
-output "AWS-SYD-ID" {
-  value = data.mso_site.AWS-SYD.id
-}
+# output "AWS-SYD-ID" {
+#   value = data.mso_site.AWS-SYD.id
+# }
+#
+# output "AZURE-MEL-ID" {
+#   value = data.mso_site.AZURE-MEL.id
+# }
 
-output "AZURE-MEL-ID" {
-  value = data.mso_site.AZURE-MEL.id
-}
-
-### New Demo Schema ###
+### New Demo Schema & 1st Template ###
 resource "mso_schema" "tf-hybrid-cloud" {
   name          = "tf-hybrid-cloud"
   template_name = "tf-hc-prod"
   tenant_id     = data.mso_tenant.Production.id
 }
-
-# ### New Demo Template ###
-# resource "mso_schema_template" "tf-hc-prod" {
-#   schema_id = mso_schema.tf-hybrid-cloud.id
-#   name = "tf-hc-prod"
-#   display_name = "Terraform Hybrid Cloud - Production"
-#   tenant_id = data.mso_tenant.Production.id
-# }
-
 
 resource "mso_schema_template_vrf" "tf-hc-prod" {
   schema_id       = mso_schema.tf-hybrid-cloud.id
@@ -105,9 +89,7 @@ resource "mso_schema_template_vrf" "tf-hc-prod" {
 ### Templates to Site ###
 
 /*
-
 PROVDER BROKEN - Can't add site to template, vrf needs region, not set, shouldn't need to be set either...
-
 */
 
 # resource "mso_schema_site" "AWS-SYD" {
@@ -446,6 +428,20 @@ resource "mso_rest" "vrf-workaround" {
 ]
 EOF
 
+}
+
+### Load VRF as Data ###
+data "mso_schema_site_vrf" "tf-hc-prod-aws" {
+  site_id   = data.mso_site.AWS-SYD.id
+  schema_id = mso_schema.tf-hybrid-cloud.id
+  vrf_name  = mso_schema_template_vrf.tf-hc-prod.name
+}
+
+data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  site_id       = data.mso_site.AWS-SYD.id
+  vrf_name      = mso_schema_template_vrf.tf-hc-prod.name
+  region_name   = "ap-southeast-2"
 }
 
 

@@ -1,15 +1,15 @@
-# terraform {
-#   required_providers {
-#     aws = {
-#           source = "hashicorp/aws"
-#           version = "3.25.0"
-#         }
-#     vault = {
-#       source = "hashicorp/vault"
-#       version = "2.18.0"
-#     }
-#   }
-# }
+terraform {
+  required_providers {
+    aws = {
+          source = "hashicorp/aws"
+          version = "3.25.0"
+        }
+    # vault = {
+    #   source = "hashicorp/vault"
+    #   version = "2.18.0"
+    # }
+  }
+}
 #
 # provider "vault" {
 #   address = "https://Hashi-Vault-1F899TQ4290I3-1824033843.ap-southeast-2.elb.amazonaws.com"
