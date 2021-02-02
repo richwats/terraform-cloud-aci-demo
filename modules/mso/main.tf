@@ -800,5 +800,5 @@ resource "mso_schema_template_deploy" "aws_syd" {
   schema_id     = mso_schema.tf-hybrid-cloud.id
   template_name = mso_schema.tf-hybrid-cloud.template_name
   site_id       = data.mso_site.AWS-SYD.id
-  undeploy      = true
+  undeploy      = false
 }
