@@ -416,7 +416,7 @@ resource "mso_rest" "vrf-workaround" {
           "isVpnGatewayRouter": false,
           "isTGWAttachment": true,
           "cloudRsCtxProfileToGatewayRouterP": {
-            "name": "default",
+            "name": "HUB1",
             "tenantName": "infra"
           },
           "hubnetworkPeering": false
@@ -799,6 +799,6 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 resource "mso_schema_template_deploy" "aws_syd" {
   schema_id     = mso_schema.tf-hybrid-cloud.id
   template_name = mso_schema.tf-hybrid-cloud.template_name
-  site_id       = data.mso_site.AWS-SYD.id
-  undeploy      = false
+  # site_id       = data.mso_site.AWS-SYD.id
+  # undeploy      = false
 }
