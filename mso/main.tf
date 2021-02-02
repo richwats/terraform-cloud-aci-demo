@@ -435,6 +435,8 @@ data "mso_schema_site_vrf" "tf-hc-prod-aws" {
   site_id   = data.mso_site.AWS-SYD.id
   schema_id = mso_schema.tf-hybrid-cloud.id
   vrf_name  = mso_schema_template_vrf.tf-hc-prod.name
+
+  depends_on = [mso_rest.vrf-workaround]
 }
 
 data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
@@ -442,6 +444,8 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
   site_id       = data.mso_site.AWS-SYD.id
   vrf_name      = mso_schema_template_vrf.tf-hc-prod.name
   region_name   = "ap-southeast-2"
+
+  depends_on = [mso_rest.vrf-workaround]
 }
 
 
