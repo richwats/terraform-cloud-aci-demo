@@ -26,6 +26,13 @@ terraform {
 #   secret_key = data.vault_generic_secret.aws-prod.data["secret"]
 # }
 
+data "aws_vpc" "selected" {
+  # id = var.vpc_id
+  filter = {
+    name = ""
+    values = []
+  }
+}
 
 # ## Data - Existing Produ VPC
 # data "aws_vpc" "target-vpc" {

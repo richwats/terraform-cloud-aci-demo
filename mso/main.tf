@@ -792,3 +792,13 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
   destination_from      = "ssh"
   destination_to        = "ssh"
 }
+
+
+### DEPLOY
+
+resource "mso_schema_template_deploy" "aws_syd" {
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema.tf-hybrid-cloud.template_name
+  site_id       = data.mso_site.AWS-SYD.id
+  undeploy      = false
+}
