@@ -385,28 +385,28 @@ resource "mso_rest" "vrf-workaround" {
         "regions": [{
           "name": "ap-southeast-2",
           "cidrs": [{
-            "ip": "10.11.0.0/16",
+            "ip": "10.111.0.0/16",
             "primary": true,
             "subnets": [
               {
-              "ip": "10.11.1.0/24",
+              "ip": "10.111.1.0/24",
               "zone": "ap-southeast-2a",
               "name": "",
               "usage": "gateway"
               },
               {
-              "ip": "10.11.2.0/24",
+              "ip": "10.111.2.0/24",
               "zone": "ap-southeast-2b",
               "name": "",
               "usage": "gateway"
               },
               {
-              "ip": "10.11.3.0/24",
+              "ip": "10.111.3.0/24",
               "zone": "ap-southeast-2a",
               "name": ""
               },
               {
-              "ip": "10.11.4.0/24",
+              "ip": "10.111.4.0/24",
               "zone": "ap-southeast-2b",
               "name": ""
               }
