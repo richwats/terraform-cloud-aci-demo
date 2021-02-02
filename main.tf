@@ -11,10 +11,10 @@ terraform {
       source = "CiscoDevNet/mso"
       version = "~> 0.1.5"
     }
-    aws = {
-      source = "hashicorp/aws"
-      version = "3.25.0"
-    }
+    # aws = {
+    #   source = "hashicorp/aws"
+    #   version = "3.25.0"
+    # }
     vault = {
       source = "hashicorp/vault"
       version = "2.18.0"
@@ -67,7 +67,7 @@ provider "aws" {
 ### Nested Modules ###
 
 module "cloud-aci" {
-  source = "./mso"
+  source = "./modules/mso"
 
 }
 
