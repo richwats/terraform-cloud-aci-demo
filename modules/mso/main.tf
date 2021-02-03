@@ -716,7 +716,7 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
   template_name   = mso_schema.tf-hybrid-cloud.template_name
   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
   filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-dns.name
+  filter_name     = mso_schema_template_filter_entry.tf-allow-dns-1.name
   directives      = ["none"]
 }
 
