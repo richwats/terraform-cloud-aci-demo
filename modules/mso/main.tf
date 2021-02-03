@@ -457,6 +457,13 @@ resource "mso_schema_template_anp" "tf-demo-app-1" {
   display_name  = "Terraform Demo App 1"
 }
 
+resource "mso_schema_template_anp" "tf-k8s-1" {
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  template      = mso_schema.tf-hybrid-cloud.template_name
+  name          = "tf-k8s-1"
+  display_name  = "Terraform K8S Demo 1"
+}
+
 ### ExEPGs
 
 ## Doesn't work until VRF configured per Site
@@ -480,6 +487,17 @@ resource "mso_schema_template_external_epg" "tf-public" {
 }
 
 ### Ex EPGs to Contracts ###
+
+## K8S
+resource "mso_schema_template_external_epg_contract" "tf-public-4" {
+  schema_id         = mso_schema.tf-hybrid-cloud.id
+  template_name     = mso_schema.tf-hybrid-cloud.template_name
+  contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+  external_epg_name = mso_schema_template_external_epg.tf-public.external_epg_name
+  relationship_type = "consumer"
+}
+
+## WordPress
 resource "mso_schema_template_external_epg_contract" "tf-public-1" {
   schema_id         = mso_schema.tf-hybrid-cloud.id
   template_name     = mso_schema.tf-hybrid-cloud.template_name
@@ -505,6 +523,19 @@ resource "mso_schema_template_external_epg_contract" "tf-public-3" {
 }
 
 ### App EPGs
+
+## K8S
+resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
+  schema_id                   = mso_schema.tf-hybrid-cloud.id
+  template_name               = mso_schema.tf-hybrid-cloud.template_name
+  anp_name                    = mso_schema_template_anp.tf-k8s-1.name
+  name                        = "tf-k8s-worker"
+  bd_name                     = "unspecified"
+  vrf_name                    = mso_schema_template_vrf.tf-hc-prod.name
+  display_name                = "K8S Worker Node"
+}
+
+## WordPress
 resource "mso_schema_template_anp_epg" "tf-wordpress" {
   schema_id                   = mso_schema.tf-hybrid-cloud.id
   template_name               = mso_schema.tf-hybrid-cloud.template_name
@@ -606,7 +637,61 @@ resource "mso_schema_template_anp_epg_contract" "tf-mariadb-3" {
   relationship_type = "consumer"
 }
 
+## K8S
+resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
+  schema_id         = mso_schema.tf-hybrid-cloud.id
+  template_name     = mso_schema.tf-hybrid-cloud.template_name
+  anp_name          = mso_schema_template_anp.tf-k8s-1.name
+  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+  contract_name     = mso_schema_template_contract.tf-servers-to-inet.contract_name
+  relationship_type = "consumer"
+}
+
+resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+  schema_id         = mso_schema.tf-hybrid-cloud.id
+  template_name     = mso_schema.tf-hybrid-cloud.template_name
+  anp_name          = mso_schema_template_anp.tf-k8s-1.name
+  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+  contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+  relationship_type = "provider"
+}
+
 ### Contracts ###
+
+## k8s
+resource "mso_schema_template_contract" "tf-inet-to-k8s" {
+  schema_id               = mso_schema.tf-hybrid-cloud.id
+  template_name           = mso_schema.tf-hybrid-cloud.template_name
+  contract_name           = "tf-inet-to-k8s"
+  display_name            = "Internet to K8S Workers"
+  filter_type             = "bothWay"
+  scope                   = "context"
+  filter_relationships    = {
+    filter_name           = mso_schema_template_filter_entry.tf-allow-icmp.name
+  }
+  directives = ["none"]
+}
+
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-ssh.name
+#   directives      = ["none"]
+# }
+
+resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
+  schema_id       = mso_schema.tf-hybrid-cloud.id
+  template_name   = mso_schema.tf-hybrid-cloud.template_name
+  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+  filter_type     = "bothWay"
+  filter_name     = mso_schema_template_filter_entry.tf-allow-http-1.name
+  directives      = ["none"]
+}
+
+
+## WordPress
 resource "mso_schema_template_contract" "tf-inet-to-wordpress" {
   schema_id               = mso_schema.tf-hybrid-cloud.id
   template_name           = mso_schema.tf-hybrid-cloud.template_name
