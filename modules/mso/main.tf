@@ -711,6 +711,14 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-3" {
   directives      = ["none"]
 }
 
+resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
+  schema_id       = mso_schema.tf-hybrid-cloud.id
+  template_name   = mso_schema.tf-hybrid-cloud.template_name
+  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+  filter_type     = "bothWay"
+  filter_name     = mso_schema_template_filter_entry.tf-allow-dns.name
+  directives      = ["none"]
+}
 
 
 ## WordPress
@@ -900,6 +908,8 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
   destination_to        = "ssh"
 }
 
+## K8S
+
 resource "mso_schema_template_filter_entry" "tf-allow-61678" {
   schema_id             = mso_schema.tf-hybrid-cloud.id
   template_name         = mso_schema.tf-hybrid-cloud.template_name
@@ -913,6 +923,49 @@ resource "mso_schema_template_filter_entry" "tf-allow-61678" {
   destination_from      = "61678"
   destination_to        = "61678"
 }
+
+resource "mso_schema_template_filter_entry" "tf-allow-dns-1" {
+  schema_id             = mso_schema.tf-hybrid-cloud.id
+  template_name         = mso_schema.tf-hybrid-cloud.template_name
+  name                  = "tf-allow-dns"
+  display_name          = "Allow DNS"
+  entry_name            = "dns-udp"
+  entry_display_name    = "dns-udp"
+  entry_description     = "Allow Any to Destination DNS UDP 53"
+  ether_type            = "ip"
+  ip_protocol           = "udp"
+  destination_from      = "dns"
+  destination_to        = "dns"
+}
+
+resource "mso_schema_template_filter_entry" "tf-allow-dns-2" {
+  schema_id             = mso_schema.tf-hybrid-cloud.id
+  template_name         = mso_schema.tf-hybrid-cloud.template_name
+  name                  = "tf-allow-dns"
+  display_name          = "Allow DNS"
+  entry_name            = "dns-tcp"
+  entry_display_name    = "dns-tcp"
+  entry_description     = "Allow Any to Destination DNS TCP 53"
+  ether_type            = "ip"
+  ip_protocol           = "tcp"
+  destination_from      = "dns"
+  destination_to        = "dns"
+}
+
+resource "mso_schema_template_filter_entry" "tf-allow-dns-3" {
+  schema_id             = mso_schema.tf-hybrid-cloud.id
+  template_name         = mso_schema.tf-hybrid-cloud.template_name
+  name                  = "tf-allow-dns"
+  display_name          = "Allow DNS"
+  entry_name            = "dns-9153"
+  entry_display_name    = "dns-9153"
+  entry_description     = "Allow Any to Destination DNS TCP 9153"
+  ether_type            = "ip"
+  ip_protocol           = "tcp"
+  destination_from      = "9153"
+  destination_to        = "9153"
+}
+
 
 ### DEPLOY
 
