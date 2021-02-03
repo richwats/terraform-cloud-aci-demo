@@ -535,7 +535,7 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   display_name                = "K8S Worker Node"
 }
 
-resource "mso_schema_template_anp_epg_selector" "tf-wordpress" {
+resource "mso_schema_template_anp_epg_selector" "tf-k8s-worker" {
   schema_id     = mso_schema.tf-hybrid-cloud.id
   template_name = mso_schema.tf-hybrid-cloud.template_name
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
