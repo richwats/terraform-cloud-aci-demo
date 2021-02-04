@@ -702,14 +702,14 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
   directives      = ["none"]
 }
 
-resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-3" {
-  schema_id       = mso_schema.tf-hybrid-cloud.id
-  template_name   = mso_schema.tf-hybrid-cloud.template_name
-  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-61678.name
-  directives      = ["none"]
-}
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-3" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-61678.name
+#   directives      = ["none"]
+# }
 
 resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
   schema_id       = mso_schema.tf-hybrid-cloud.id
@@ -720,24 +720,32 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
   directives      = ["none"]
 }
 
-resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-5" {
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-5" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-50051.name
+#   directives      = ["none"]
+# }
+#
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-6" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-10250.name
+#   directives      = ["none"]
+# }
+
+resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-7" {
   schema_id       = mso_schema.tf-hybrid-cloud.id
   template_name   = mso_schema.tf-hybrid-cloud.template_name
   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
   filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-50051.name
+  filter_name     = mso_schema_template_filter_entry.tf-allow-range-1.name
   directives      = ["none"]
 }
-
-resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-6" {
-  schema_id       = mso_schema.tf-hybrid-cloud.id
-  template_name   = mso_schema.tf-hybrid-cloud.template_name
-  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-10250.name
-  directives      = ["none"]
-}
-
 
 ## WordPress
 resource "mso_schema_template_contract" "tf-inet-to-wordpress" {
@@ -928,47 +936,61 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 
 ## K8S
 
-resource "mso_schema_template_filter_entry" "tf-allow-10250" {
+# resource "mso_schema_template_filter_entry" "tf-allow-10250" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-10250"
+#   display_name          = "Allow 10250"
+#   entry_name            = "10250"
+#   entry_display_name    = "10250"
+#   entry_description     = "Allow Any to Destination TCP 10250"
+#   ether_type            = "ip"
+#   ip_protocol           = "tcp"
+#   destination_from      = "10250"
+#   destination_to        = "10250"
+# }
+#
+#
+# resource "mso_schema_template_filter_entry" "tf-allow-50051" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-50051"
+#   display_name          = "Allow 50051"
+#   entry_name            = "50051"
+#   entry_display_name    = "50051"
+#   entry_description     = "Allow Any to Destination TCP 50051"
+#   ether_type            = "ip"
+#   ip_protocol           = "tcp"
+#   destination_from      = "50051"
+#   destination_to        = "50051"
+# }
+#
+# resource "mso_schema_template_filter_entry" "tf-allow-61678" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-61678"
+#   display_name          = "Allow 61678"
+#   entry_name            = "61678"
+#   entry_display_name    = "61678"
+#   entry_description     = "Allow Any to Destination TCP 61678"
+#   ether_type            = "ip"
+#   ip_protocol           = "tcp"
+#   destination_from      = "61678"
+#   destination_to        = "61678"
+# }
+
+resource "mso_schema_template_filter_entry" "tf-allow-range-1" {
   schema_id             = mso_schema.tf-hybrid-cloud.id
   template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-10250"
-  display_name          = "Allow 10250"
-  entry_name            = "10250"
-  entry_display_name    = "10250"
-  entry_description     = "Allow Any to Destination TCP 10250"
+  name                  = "tf-allow-range-1"
+  display_name          = "Allow High Ports"
+  entry_name            = "High Ports"
+  entry_display_name    = "High Ports"
+  entry_description     = "Allow Any to High Ports"
   ether_type            = "ip"
   ip_protocol           = "tcp"
-  destination_from      = "10250"
-  destination_to        = "10250"
-}
-
-
-resource "mso_schema_template_filter_entry" "tf-allow-50051" {
-  schema_id             = mso_schema.tf-hybrid-cloud.id
-  template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-50051"
-  display_name          = "Allow 50051"
-  entry_name            = "50051"
-  entry_display_name    = "50051"
-  entry_description     = "Allow Any to Destination TCP 50051"
-  ether_type            = "ip"
-  ip_protocol           = "tcp"
-  destination_from      = "50051"
-  destination_to        = "50051"
-}
-
-resource "mso_schema_template_filter_entry" "tf-allow-61678" {
-  schema_id             = mso_schema.tf-hybrid-cloud.id
-  template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-61678"
-  display_name          = "Allow 61678"
-  entry_name            = "61678"
-  entry_display_name    = "61678"
-  entry_description     = "Allow Any to Destination TCP 61678"
-  ether_type            = "ip"
-  ip_protocol           = "tcp"
-  destination_from      = "61678"
-  destination_to        = "61678"
+  destination_from      = "1025"
+  destination_to        = "65535"
 }
 
 resource "mso_schema_template_filter_entry" "tf-allow-dns-1" {
