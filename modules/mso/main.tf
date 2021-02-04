@@ -984,7 +984,7 @@ resource "mso_schema_template_filter_entry" "tf-allow-range-1" {
   template_name         = mso_schema.tf-hybrid-cloud.template_name
   name                  = "tf-allow-range-1"
   display_name          = "Allow High Ports"
-  entry_name            = "High Ports"
+  entry_name            = "highPorts"
   entry_display_name    = "High Ports"
   entry_description     = "Allow Any to High Ports"
   ether_type            = "ip"
