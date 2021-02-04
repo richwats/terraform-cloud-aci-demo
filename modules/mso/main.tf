@@ -729,7 +729,14 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-5" {
   directives      = ["none"]
 }
 
-
+resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-6" {
+  schema_id       = mso_schema.tf-hybrid-cloud.id
+  template_name   = mso_schema.tf-hybrid-cloud.template_name
+  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+  filter_type     = "bothWay"
+  filter_name     = mso_schema_template_filter_entry.tf-allow-10250.name
+  directives      = ["none"]
+}
 
 
 ## WordPress
@@ -920,6 +927,21 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 }
 
 ## K8S
+
+resource "mso_schema_template_filter_entry" "tf-allow-10250" {
+  schema_id             = mso_schema.tf-hybrid-cloud.id
+  template_name         = mso_schema.tf-hybrid-cloud.template_name
+  name                  = "tf-allow-10250"
+  display_name          = "Allow 10250"
+  entry_name            = "10250"
+  entry_display_name    = "10250"
+  entry_description     = "Allow Any to Destination TCP 10250"
+  ether_type            = "ip"
+  ip_protocol           = "tcp"
+  destination_from      = "10250"
+  destination_to        = "10250"
+}
+
 
 resource "mso_schema_template_filter_entry" "tf-allow-50051" {
   schema_id             = mso_schema.tf-hybrid-cloud.id
