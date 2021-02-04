@@ -738,14 +738,14 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
 #   directives      = ["none"]
 # }
 
-resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-7" {
-  schema_id       = mso_schema.tf-hybrid-cloud.id
-  template_name   = mso_schema.tf-hybrid-cloud.template_name
-  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-range-1.name
-  directives      = ["none"]
-}
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-7" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-range-1.name
+#   directives      = ["none"]
+# }
 
 ## WordPress
 resource "mso_schema_template_contract" "tf-inet-to-wordpress" {
@@ -979,19 +979,19 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 #   destination_to        = "61678"
 # }
 
-resource "mso_schema_template_filter_entry" "tf-allow-range-1" {
-  schema_id             = mso_schema.tf-hybrid-cloud.id
-  template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-range-1"
-  display_name          = "Allow High Ports"
-  entry_name            = "highPorts"
-  entry_display_name    = "High Ports"
-  entry_description     = "Allow Any to High Ports"
-  ether_type            = "ip"
-  ip_protocol           = "tcp"
-  destination_from      = "1025"
-  destination_to        = "65535"
-}
+# resource "mso_schema_template_filter_entry" "tf-allow-range-1" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-range-1"
+#   display_name          = "Allow High Ports"
+#   entry_name            = "highPorts"
+#   entry_display_name    = "High Ports"
+#   entry_description     = "Allow Any to High Ports"
+#   ether_type            = "ip"
+#   ip_protocol           = "tcp"
+#   destination_from      = "1025"
+#   destination_to        = "65535"
+# }
 
 resource "mso_schema_template_filter_entry" "tf-allow-dns-1" {
   schema_id             = mso_schema.tf-hybrid-cloud.id
