@@ -547,6 +547,30 @@ resource "mso_schema_template_anp_epg_selector" "tf-k8s-worker" {
     value       = "tf-k8s-worker"
   }
 }
+
+resource "mso_schema_template_anp_epg" "tf-k8s-cluster" {
+  schema_id                   = mso_schema.tf-hybrid-cloud.id
+  template_name               = mso_schema.tf-hybrid-cloud.template_name
+  anp_name                    = mso_schema_template_anp.tf-k8s-1.name
+  name                        = "tf-k8s-cluster"
+  bd_name                     = "unspecified"
+  vrf_name                    = mso_schema_template_vrf.tf-hc-prod.name
+  display_name                = "K8S Cluster Security EPG"
+}
+
+resource "mso_schema_template_anp_epg_selector" "tf-k8s-cluster" {
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema.tf-hybrid-cloud.template_name
+  anp_name      = mso_schema_template_anp.tf-k8s-1.name
+  epg_name      = mso_schema_template_anp_epg.tf-k8s-cluster.name
+  name          = "tf-k8s-cluster"
+  expressions {
+    key         = "Custom:EPG"
+    operator    = "equals"
+    value       = "tf-k8s-cluster"
+  }
+}
+
 ## WordPress
 resource "mso_schema_template_anp_epg" "tf-wordpress" {
   schema_id                   = mso_schema.tf-hybrid-cloud.id
@@ -595,6 +619,29 @@ resource "mso_schema_template_anp_epg_selector" "tf-mariadb" {
 }
 
 ### App EPG to Contracts ###
+
+## K8S
+
+resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
+  schema_id         = mso_schema.tf-hybrid-cloud.id
+  template_name     = mso_schema.tf-hybrid-cloud.template_name
+  anp_name          = mso_schema_template_anp.tf-demo-app-1.name
+  epg_name          = mso_schema_template_anp_epg.tf-k8s-cluster.name
+  contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
+  relationship_type = "consumer"
+}
+
+resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
+  schema_id         = mso_schema.tf-hybrid-cloud.id
+  template_name     = mso_schema.tf-hybrid-cloud.template_name
+  anp_name          = mso_schema_template_anp.tf-demo-app-1.name
+  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+  contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
+  relationship_type = "provider"
+}
+
+## WordPress
+
 resource "mso_schema_template_anp_epg_contract" "tf-wordpress-1" {
   schema_id         = mso_schema.tf-hybrid-cloud.id
   template_name     = mso_schema.tf-hybrid-cloud.template_name
@@ -683,6 +730,20 @@ resource "mso_schema_template_contract" "tf-inet-to-k8s" {
   }
   directives = ["none"]
 }
+
+resource "mso_schema_template_contract" "tf-eks-cluster-to-node" {
+  schema_id               = mso_schema.tf-hybrid-cloud.id
+  template_name           = mso_schema.tf-hybrid-cloud.template_name
+  contract_name           = "tf-eks-cluster-to-node"
+  display_name            = "Cluster to K8S Workers"
+  filter_type             = "bothWay"
+  scope                   = "context"
+  filter_relationships    = {
+    filter_name           = mso_schema_template_filter_entry.tf-allow-any.name
+  }
+  directives = ["none"]
+}
+
 
 # resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
 #   schema_id       = mso_schema.tf-hybrid-cloud.id
