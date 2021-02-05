@@ -631,7 +631,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
   relationship_type = "consumer"
 }
 
-resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
+resource "mso_schema_template_anp_epg_contract" "tf-eks-2" {
   schema_id         = mso_schema.tf-hybrid-cloud.id
   template_name     = mso_schema.tf-hybrid-cloud.template_name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
