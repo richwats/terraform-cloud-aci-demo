@@ -625,7 +625,7 @@ resource "mso_schema_template_anp_epg_selector" "tf-mariadb" {
 resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
   schema_id         = mso_schema.tf-hybrid-cloud.id
   template_name     = mso_schema.tf-hybrid-cloud.template_name
-  anp_name          = mso_schema_template_anp.tf-demo-app-1.name
+  anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-cluster.name
   contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
   relationship_type = "consumer"
@@ -634,7 +634,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
 resource "mso_schema_template_anp_epg_contract" "tf-eks-2" {
   schema_id         = mso_schema.tf-hybrid-cloud.id
   template_name     = mso_schema.tf-hybrid-cloud.template_name
-  anp_name          = mso_schema_template_anp.tf-demo-app-1.name
+  anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
   relationship_type = "provider"
