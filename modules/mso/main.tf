@@ -535,41 +535,42 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   display_name                = "K8S Worker Node"
 }
 
-resource "mso_schema_template_anp_epg_selector" "tf-k8s-worker" {
-  schema_id     = mso_schema.tf-hybrid-cloud.id
-  template_name = mso_schema.tf-hybrid-cloud.template_name
-  anp_name      = mso_schema_template_anp.tf-k8s-1.name
-  epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
-  name          = "tf-k8s-worker"
-  expressions {
-    key         = "Custom:EPG"
-    operator    = "equals"
-    value       = "tf-k8s-worker"
-  }
-}
+# resource "mso_schema_template_anp_epg_selector" "tf-k8s-worker" {
+#   schema_id     = mso_schema.tf-hybrid-cloud.id
+#   template_name = mso_schema.tf-hybrid-cloud.template_name
+#   anp_name      = mso_schema_template_anp.tf-k8s-1.name
+#   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   name          = "tf-k8s-worker"
+#   expressions {
+#     key         = "Custom:EPG"
+#     operator    = "equals"
+#     value       = "tf-k8s-worker"
+#   }
+# }
 
-resource "mso_schema_template_anp_epg" "tf-k8s-cluster" {
-  schema_id                   = mso_schema.tf-hybrid-cloud.id
-  template_name               = mso_schema.tf-hybrid-cloud.template_name
-  anp_name                    = mso_schema_template_anp.tf-k8s-1.name
-  name                        = "tf-k8s-cluster"
-  bd_name                     = "unspecified"
-  vrf_name                    = mso_schema_template_vrf.tf-hc-prod.name
-  display_name                = "K8S Cluster Security EPG"
-}
 
-resource "mso_schema_template_anp_epg_selector" "tf-k8s-cluster" {
-  schema_id     = mso_schema.tf-hybrid-cloud.id
-  template_name = mso_schema.tf-hybrid-cloud.template_name
-  anp_name      = mso_schema_template_anp.tf-k8s-1.name
-  epg_name      = mso_schema_template_anp_epg.tf-k8s-cluster.name
-  name          = "tf-k8s-cluster"
-  expressions {
-    key         = "Custom:EPG"
-    operator    = "equals"
-    value       = "tf-k8s-cluster"
-  }
-}
+# resource "mso_schema_template_anp_epg" "tf-k8s-cluster" {
+#   schema_id                   = mso_schema.tf-hybrid-cloud.id
+#   template_name               = mso_schema.tf-hybrid-cloud.template_name
+#   anp_name                    = mso_schema_template_anp.tf-k8s-1.name
+#   name                        = "tf-k8s-cluster"
+#   bd_name                     = "unspecified"
+#   vrf_name                    = mso_schema_template_vrf.tf-hc-prod.name
+#   display_name                = "K8S Cluster Security EPG"
+# }
+#
+# resource "mso_schema_template_anp_epg_selector" "tf-k8s-cluster" {
+#   schema_id     = mso_schema.tf-hybrid-cloud.id
+#   template_name = mso_schema.tf-hybrid-cloud.template_name
+#   anp_name      = mso_schema_template_anp.tf-k8s-1.name
+#   epg_name      = mso_schema_template_anp_epg.tf-k8s-cluster.name
+#   name          = "tf-k8s-cluster"
+#   expressions {
+#     key         = "Custom:EPG"
+#     operator    = "equals"
+#     value       = "tf-k8s-cluster"
+#   }
+# }
 
 ## WordPress
 resource "mso_schema_template_anp_epg" "tf-wordpress" {
@@ -622,21 +623,39 @@ resource "mso_schema_template_anp_epg_selector" "tf-mariadb" {
 
 ## K8S
 
-resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
-  schema_id         = mso_schema.tf-hybrid-cloud.id
-  template_name     = mso_schema.tf-hybrid-cloud.template_name
-  anp_name          = mso_schema_template_anp.tf-k8s-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-cluster.name
-  contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
-  relationship_type = "consumer"
-}
+# resource "mso_schema_template_anp_epg_contract" "tf-eks-1" {
+#   schema_id         = mso_schema.tf-hybrid-cloud.id
+#   template_name     = mso_schema.tf-hybrid-cloud.template_name
+#   anp_name          = mso_schema_template_anp.tf-k8s-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-cluster.name
+#   contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
+#   relationship_type = "consumer"
+# }
 
-resource "mso_schema_template_anp_epg_contract" "tf-eks-2" {
+# resource "mso_schema_template_anp_epg_contract" "tf-eks-2" {
+#   schema_id         = mso_schema.tf-hybrid-cloud.id
+#   template_name     = mso_schema.tf-hybrid-cloud.template_name
+#   anp_name          = mso_schema_template_anp.tf-k8s-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
+#   relationship_type = "provider"
+# }
+
+resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
   schema_id         = mso_schema.tf-hybrid-cloud.id
   template_name     = mso_schema.tf-hybrid-cloud.template_name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = mso_schema_template_contract.tf-eks-cluster-to-node.contract_name
+  contract_name     = mso_schema_template_contract.tf-servers-to-inet.contract_name
+  relationship_type = "consumer"
+}
+
+resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+  schema_id         = mso_schema.tf-hybrid-cloud.id
+  template_name     = mso_schema.tf-hybrid-cloud.template_name
+  anp_name          = mso_schema_template_anp.tf-k8s-1.name
+  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+  contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
   relationship_type = "provider"
 }
 
@@ -696,29 +715,23 @@ resource "mso_schema_template_anp_epg_contract" "tf-mariadb-3" {
   relationship_type = "consumer"
 }
 
-## K8S
-resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
-  schema_id         = mso_schema.tf-hybrid-cloud.id
-  template_name     = mso_schema.tf-hybrid-cloud.template_name
-  anp_name          = mso_schema_template_anp.tf-k8s-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = mso_schema_template_contract.tf-servers-to-inet.contract_name
-  relationship_type = "consumer"
-}
-
-resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
-  schema_id         = mso_schema.tf-hybrid-cloud.id
-  template_name     = mso_schema.tf-hybrid-cloud.template_name
-  anp_name          = mso_schema_template_anp.tf-k8s-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  relationship_type = "provider"
-}
-
 ### Contracts ###
 
 ## k8s
-resource "mso_schema_template_contract" "tf-inet-to-k8s" {
+# resource "mso_schema_template_contract" "tf-inet-to-k8s" {
+#   schema_id               = mso_schema.tf-hybrid-cloud.id
+#   template_name           = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name           = "tf-inet-to-k8s"
+#   display_name            = "Internet to K8S Workers"
+#   filter_type             = "bothWay"
+#   scope                   = "context"
+#   filter_relationships    = {
+#     filter_name           = mso_schema_template_filter_entry.tf-allow-icmp.name
+#   }
+#   directives = ["none"]
+# }
+
+resource "mso_schema_template_contract" "tf-inet-to-k8s-1" {
   schema_id               = mso_schema.tf-hybrid-cloud.id
   template_name           = mso_schema.tf-hybrid-cloud.template_name
   contract_name           = "tf-inet-to-k8s"
@@ -726,24 +739,25 @@ resource "mso_schema_template_contract" "tf-inet-to-k8s" {
   filter_type             = "bothWay"
   scope                   = "context"
   filter_relationships    = {
-    filter_name           = mso_schema_template_filter_entry.tf-allow-icmp.name
-  }
-  directives = ["none"]
-}
-
-resource "mso_schema_template_contract" "tf-eks-cluster-to-node" {
-  schema_id               = mso_schema.tf-hybrid-cloud.id
-  template_name           = mso_schema.tf-hybrid-cloud.template_name
-  contract_name           = "tf-eks-cluster-to-node"
-  display_name            = "Cluster to K8S Workers"
-  filter_type             = "bothWay"
-  scope                   = "context"
-  filter_relationships    = {
+    # filter_schema_id      = mso_schema.tf-hybrid-cloud.id
+    # filter_template_name  = mso_schema_template.tf-hc-prod.name
     filter_name           = mso_schema_template_filter_entry.tf-allow-any.name
   }
   directives = ["none"]
 }
 
+# resource "mso_schema_template_contract" "tf-eks-cluster-to-node" {
+#   schema_id               = mso_schema.tf-hybrid-cloud.id
+#   template_name           = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name           = "tf-eks-cluster-to-node"
+#   display_name            = "Cluster to K8S Workers"
+#   filter_type             = "bothWay"
+#   scope                   = "context"
+#   filter_relationships    = {
+#     filter_name           = mso_schema_template_filter_entry.tf-allow-any.name
+#   }
+#   directives = ["none"]
+# }
 
 # resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
 #   schema_id       = mso_schema.tf-hybrid-cloud.id
@@ -754,14 +768,14 @@ resource "mso_schema_template_contract" "tf-eks-cluster-to-node" {
 #   directives      = ["none"]
 # }
 
-resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
-  schema_id       = mso_schema.tf-hybrid-cloud.id
-  template_name   = mso_schema.tf-hybrid-cloud.template_name
-  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-http-1.name
-  directives      = ["none"]
-}
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-http-1.name
+#   directives      = ["none"]
+# }
 
 # resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-3" {
 #   schema_id       = mso_schema.tf-hybrid-cloud.id
@@ -772,14 +786,14 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-2" {
 #   directives      = ["none"]
 # }
 
-resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
-  schema_id       = mso_schema.tf-hybrid-cloud.id
-  template_name   = mso_schema.tf-hybrid-cloud.template_name
-  contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  filter_type     = "bothWay"
-  filter_name     = mso_schema_template_filter_entry.tf-allow-dns-1.name
-  directives      = ["none"]
-}
+# resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-4" {
+#   schema_id       = mso_schema.tf-hybrid-cloud.id
+#   template_name   = mso_schema.tf-hybrid-cloud.template_name
+#   contract_name   = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   filter_type     = "bothWay"
+#   filter_name     = mso_schema_template_filter_entry.tf-allow-dns-1.name
+#   directives      = ["none"]
+# }
 
 # resource "mso_schema_template_contract_filter" "tf-inet-to-k8s-5" {
 #   schema_id       = mso_schema.tf-hybrid-cloud.id
@@ -1054,47 +1068,47 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 #   destination_to        = "65535"
 # }
 
-resource "mso_schema_template_filter_entry" "tf-allow-dns-1" {
-  schema_id             = mso_schema.tf-hybrid-cloud.id
-  template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-dns"
-  display_name          = "Allow DNS"
-  entry_name            = "dns-udp"
-  entry_display_name    = "dns-udp"
-  entry_description     = "Allow Any to Destination DNS UDP 53"
-  ether_type            = "ip"
-  ip_protocol           = "udp"
-  destination_from      = "dns"
-  destination_to        = "dns"
-}
-
-resource "mso_schema_template_filter_entry" "tf-allow-dns-2" {
-  schema_id             = mso_schema.tf-hybrid-cloud.id
-  template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-dns"
-  display_name          = "Allow DNS"
-  entry_name            = "dns-tcp"
-  entry_display_name    = "dns-tcp"
-  entry_description     = "Allow Any to Destination DNS TCP 53"
-  ether_type            = "ip"
-  ip_protocol           = "tcp"
-  destination_from      = "dns"
-  destination_to        = "dns"
-}
-
-resource "mso_schema_template_filter_entry" "tf-allow-dns-3" {
-  schema_id             = mso_schema.tf-hybrid-cloud.id
-  template_name         = mso_schema.tf-hybrid-cloud.template_name
-  name                  = "tf-allow-dns"
-  display_name          = "Allow DNS"
-  entry_name            = "dns-9153"
-  entry_display_name    = "dns-9153"
-  entry_description     = "Allow Any to Destination DNS TCP 9153"
-  ether_type            = "ip"
-  ip_protocol           = "tcp"
-  destination_from      = "9153"
-  destination_to        = "9153"
-}
+# resource "mso_schema_template_filter_entry" "tf-allow-dns-1" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-dns"
+#   display_name          = "Allow DNS"
+#   entry_name            = "dns-udp"
+#   entry_display_name    = "dns-udp"
+#   entry_description     = "Allow Any to Destination DNS UDP 53"
+#   ether_type            = "ip"
+#   ip_protocol           = "udp"
+#   destination_from      = "dns"
+#   destination_to        = "dns"
+# }
+#
+# resource "mso_schema_template_filter_entry" "tf-allow-dns-2" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-dns"
+#   display_name          = "Allow DNS"
+#   entry_name            = "dns-tcp"
+#   entry_display_name    = "dns-tcp"
+#   entry_description     = "Allow Any to Destination DNS TCP 53"
+#   ether_type            = "ip"
+#   ip_protocol           = "tcp"
+#   destination_from      = "dns"
+#   destination_to        = "dns"
+# }
+#
+# resource "mso_schema_template_filter_entry" "tf-allow-dns-3" {
+#   schema_id             = mso_schema.tf-hybrid-cloud.id
+#   template_name         = mso_schema.tf-hybrid-cloud.template_name
+#   name                  = "tf-allow-dns"
+#   display_name          = "Allow DNS"
+#   entry_name            = "dns-9153"
+#   entry_display_name    = "dns-9153"
+#   entry_description     = "Allow Any to Destination DNS TCP 9153"
+#   ether_type            = "ip"
+#   ip_protocol           = "tcp"
+#   destination_from      = "9153"
+#   destination_to        = "9153"
+# }
 
 
 ### DEPLOY

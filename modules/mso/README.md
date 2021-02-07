@@ -1,1 +1,3 @@
 # Cisco Multi Site Orchestrator (MSO) Cloud ACI Infrasturcture
+
+- Can't get EKS to use explicit security group for cluster...
