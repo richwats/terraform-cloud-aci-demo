@@ -549,6 +549,7 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
 # }
 
 
+
 # resource "mso_schema_template_anp_epg" "tf-k8s-cluster" {
 #   schema_id                   = mso_schema.tf-hybrid-cloud.id
 #   template_name               = mso_schema.tf-hybrid-cloud.template_name
@@ -1110,6 +1111,35 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 #   destination_to        = "9153"
 # }
 
+### AWS Site Specific
+
+resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  site_id       = data.mso_site.AWS-SYD.id
+  template_name = mso_schema.tf-hybrid-cloud.template_name
+  anp_name      = mso_schema_template_anp.tf-k8s-1.name
+  epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
+  name          = "tf-aws-subnet-3"
+  expressions {
+    key         = "ipAddress"
+    operator    = "equals"
+    value       = "10.111.3.0/24"
+  }
+}
+
+resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  site_id       = data.mso_site.AWS-SYD.id
+  template_name = mso_schema.tf-hybrid-cloud.template_name
+  anp_name      = mso_schema_template_anp.tf-k8s-1.name
+  epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
+  name          = "tf-aws-subnet-4"
+  expressions {
+    key         = "ipAddress"
+    operator    = "equals"
+    value       = "10.111.4.0/24"
+  }
+}
 
 ### DEPLOY
 
