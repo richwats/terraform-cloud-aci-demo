@@ -731,7 +731,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-mariadb-3" {
 #   directives = ["none"]
 # }
 
-resource "mso_schema_template_contract" "tf-inet-to-k8s-1" {
+resource "mso_schema_template_contract" "tf-inet-to-k8s" {
   schema_id               = mso_schema.tf-hybrid-cloud.id
   template_name           = mso_schema.tf-hybrid-cloud.template_name
   contract_name           = "tf-inet-to-k8s"
