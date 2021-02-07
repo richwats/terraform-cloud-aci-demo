@@ -3,7 +3,7 @@ terraform {
     hostname = "app.terraform.io"
     organization = "mel-ciscolabs-com"
     workspaces {
-      name = "terraform-cloud-aci"
+      name = "terraform-cloud-mso"
     }
   }
   required_providers {
