@@ -149,7 +149,7 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   site_id       = data.mso_site.AWS-SYD.id
   template_name = data.mso_schema_template.tf-hc-prod.name
-  # anp_name      = mso_schema_template_anp.tf-k8s-1.name
+  anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
   name          = "tf-aws-sub-5"
   expressions {
