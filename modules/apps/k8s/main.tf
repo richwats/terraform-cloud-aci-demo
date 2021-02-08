@@ -126,6 +126,17 @@ resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-2" {
   usage         = "EKS"
 }
 
+
+
+### Application Network Profile ###
+resource "mso_schema_template_anp" "tf-k8s-1" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  # template      = data.mso_schema.tf-hybrid-cloud.template_name
+  template      = data.mso_schema_template.tf-hc-prod.name
+  name          = "tf-k8s-1"
+  display_name  = "Terraform K8S Demo 1"
+}
+
 ### AWS Site Specific Configuration
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
@@ -161,15 +172,6 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-2,
   #   mso_schema_template_anp.tf-k8s-1
   # ]
-}
-
-### Application Network Profile ###
-resource "mso_schema_template_anp" "tf-k8s-1" {
-  schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  # template      = data.mso_schema.tf-hybrid-cloud.template_name
-  template      = data.mso_schema_template.tf-hc-prod.name
-  name          = "tf-k8s-1"
-  display_name  = "Terraform K8S Demo 1"
 }
 
 ### Ex EPGs to Contracts ###
