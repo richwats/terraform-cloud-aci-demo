@@ -152,8 +152,8 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
 
 ### ExEPG Needs ANP First...
 resource "mso_schema_template_anp" "tf-shared" {
-  schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template      = data.mso_schema_template.tf-hc-prod.name
+  schema_id     = mso_schema.tf-hybrid-cloud.id
+  template      = mso_schema_template.tf-hc-prod.name
   name          = "tf-shared"
   display_name  = "Terraform Shared Services"
 }
