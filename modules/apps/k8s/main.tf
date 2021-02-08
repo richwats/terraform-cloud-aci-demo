@@ -7,8 +7,6 @@ terraform {
   }
 }
 
-variable schema_prod {}
-
 ### Shared Data Sources ###
 data "mso_tenant" "Production" {
   name = "Production"
