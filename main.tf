@@ -88,7 +88,7 @@ module "app-k8s" {
 resource "mso_schema_template_deploy" "aws_syd" {
   schema_id     = module.cloud-aci.schema-prod.tf-hybrid-cloud.id
   template_name = module.cloud-aci.schema-prod.tf-hybrid-cloud.template_name
-  site_id       = module.cloud-aci.AWS-SYD.id
+  site_id       = module.cloud-aci.aws-syd.id
   undeploy      = false
 }
 #
