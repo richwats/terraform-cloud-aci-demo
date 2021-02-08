@@ -142,6 +142,7 @@ resource "mso_schema_template_anp" "tf-k8s-1" {
 /*
 
 Error: "Resource Not Found: AnpDelta with name tf-k8s-1 not found in List()"{}
+Only worked after manualy deployed???
 
 */
 
@@ -169,7 +170,7 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   template_name = data.mso_schema_template.tf-hc-prod.name
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
-  name          = "tf-aws-subnet-6"
+  name          = "tf-aws-sub-6"
   expressions {
     key         = "ipAddress"
     operator    = "equals"
