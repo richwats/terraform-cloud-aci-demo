@@ -139,27 +139,39 @@ resource "mso_schema_template_anp" "tf-k8s-1" {
 
 # ### AWS Site Specific Configuration
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
-  schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  site_id       = data.mso_site.AWS-SYD.id
-  template_name = data.mso_schema_template.tf-hc-prod.name
-  anp_name      = mso_schema_template_anp.tf-k8s-1.name
+  schema_id     = mso_schema_template_anp_epg.tf-k8s-worker.schema_id
+  site_id       = mso_schema_template_anp_epg.tf-k8s-worker.site_id
+  template_name = mso_schema_template_anp_epg.tf-k8s-worker.template_name
+  # anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
-  name          = "tf-aws-subnet-5"
-  # expressions {
-  #   key         = "ipAddress"
-  #   operator    = "equals"
-  #   value       = "10.111.5.0/24"
-  # }
+  name          = "tf-aws-sub-5"
   expressions {
-    key         = "Custom:EPG"
+    key         = "ipAddress"
     operator    = "equals"
-    value       = "test"
+    value       = "10.111.5.0/24"
   }
   # depends_on = [
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
   #   mso_schema_template_anp.tf-k8s-1
   # ]
 }
+# resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
+#   schema_id     = data.mso_schema.tf-hybrid-cloud.id
+#   site_id       = data.mso_site.AWS-SYD.id
+#   template_name = data.mso_schema_template.tf-hc-prod.name
+#   # anp_name      = mso_schema_template_anp.tf-k8s-1.name
+#   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   name          = "tf-aws-sub-5"
+#   expressions {
+#     key         = "ipAddress"
+#     operator    = "equals"
+#     value       = "10.111.5.0/24"
+#   }
+#   # depends_on = [
+#   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
+#   #   mso_schema_template_anp.tf-k8s-1
+#   # ]
+# }
 
 # resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
 #   schema_id     = data.mso_schema.tf-hybrid-cloud.id
