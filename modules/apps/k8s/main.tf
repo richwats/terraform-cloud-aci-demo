@@ -139,10 +139,10 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
     operator    = "equals"
     value       = "10.111.5.0/24"
   }
-  depends_on = [
-    mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
-    mso_schema_template_anp.tf-k8s-1
-  ]
+  # depends_on = [
+  #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
+  #   mso_schema_template_anp.tf-k8s-1
+  # ]
 }
 
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
@@ -157,10 +157,10 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
     operator    = "equals"
     value       = "10.111.6.0/24"
   }
-  depends_on = [
-    mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-2,
-    mso_schema_template_anp.tf-k8s-1
-  ]
+  # depends_on = [
+  #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-2,
+  #   mso_schema_template_anp.tf-k8s-1
+  # ]
 }
 
 ### Application Network Profile ###
