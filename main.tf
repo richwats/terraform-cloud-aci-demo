@@ -92,6 +92,11 @@ resource "mso_schema_template_deploy" "aws_syd" {
   ## Can't have these enabled at all for deploy
   # site_id       = module.cloud-aci.aws-syd.id
   # undeploy      = false
+
+  depends_on = [
+    module.cloud-aci,
+    module.app-k8s
+  ]
 }
 #
 # output "test3" {
