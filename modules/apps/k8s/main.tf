@@ -145,10 +145,15 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
   name          = "tf-aws-subnet-5"
+  # expressions {
+  #   key         = "ipAddress"
+  #   operator    = "equals"
+  #   value       = "10.111.5.0/24"
+  # }
   expressions {
-    key         = "ipAddress"
+    key         = "Custom:EPG"
     operator    = "equals"
-    value       = "10.111.5.0/24"
+    value       = "test"
   }
   # depends_on = [
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
