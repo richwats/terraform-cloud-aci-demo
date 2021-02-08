@@ -82,15 +82,15 @@ module "app-k8s" {
 #   source = "./modules/apps/wordpress"
 # }
 
-# ### TRIGGER DEPLOY
-#
-# ## AWS
-# resource "mso_schema_template_deploy" "aws_syd" {
-#   schema_id     = module.cloud-aci.schema-prod.tf-hybrid-cloud.id
-#   template_name = module.cloud-aci.schema-prod.tf-hybrid-cloud.template_name
-#   site_id       = module.cloud-aci.AWS-SYD.id
-#   undeploy      = false
-# }
+### TRIGGER DEPLOY
+
+## AWS
+resource "mso_schema_template_deploy" "aws_syd" {
+  schema_id     = module.cloud-aci.schema-prod.tf-hybrid-cloud.id
+  template_name = module.cloud-aci.schema-prod.tf-hybrid-cloud.template_name
+  site_id       = module.cloud-aci.AWS-SYD.id
+  undeploy      = false
+}
 #
 # output "test3" {
 #   value = module.app-wordpress.test-schema
