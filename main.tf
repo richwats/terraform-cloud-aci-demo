@@ -74,7 +74,8 @@ module "cloud-aci" {
 module "app-k8s" {
   source = "./modules/apps/k8s"
 
-  schema_prod = module.cloud-aci.schema_prod
+  # schema_prod = module.cloud-aci.aws-syd-prod-vrf
+  depends_on = module.cloud-aci
 }
 
 # module "app-wordpress" {

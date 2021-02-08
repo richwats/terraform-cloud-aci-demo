@@ -27,10 +27,10 @@ output "schema-prod" {
 }
 
 ## For Reference
-output "AWS-SYD" {
+output "aws-syd" {
   value = data.mso_site.AWS-SYD
 }
 
-output "AZURE-MEL" {
+output "azure-mel" {
   value = data.mso_site.AZURE-MEL
 }
