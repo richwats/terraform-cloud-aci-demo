@@ -74,7 +74,7 @@ module "cloud-aci" {
 module "app-k8s" {
   source = "./modules/apps/k8s"
 
-  AWS_SYD = module.cloud-aci.AWS_SYD
+  schema_prod = module.cloud-aci.schema_prod
 }
 
 # module "app-wordpress" {
