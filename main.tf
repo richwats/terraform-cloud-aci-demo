@@ -88,10 +88,10 @@ module "app-k8s" {
 #   site_id       = module.cloud-aci.AWS-SYD.id
 #   undeploy      = false
 # }
-
-output "test3" {
-  value = module.app-wordpress.test-schema
-}
+# 
+# output "test3" {
+#   value = module.app-wordpress.test-schema
+# }
 
 # output "test1" {
 #   value = module.cloud-aci.aws-syd-prod-vrf
