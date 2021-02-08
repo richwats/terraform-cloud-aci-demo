@@ -71,6 +71,26 @@ module "cloud-aci" {
 
 }
 
+module "app-k8s" {
+  source = "./modules/apps/k8s"
+
+}
+module "app-wordpress" {
+  source = "./modules/apps/wordpress"
+
+}
+
+### TRIGGER DEPLOY
+
+## AWS
+resource "mso_schema_template_deploy" "aws_syd" {
+  schema_id     = module.mso.mso_schema.tf-hybrid-cloud.id
+  template_name = module.mso.mso_schema.tf-hybrid-cloud.template_name
+  site_id       = module.mso.mso_site.AWS-SYD.id
+  undeploy      = false
+}
+
+
 output "test1" {
   value = module.cloud-aci.aws-syd-prod-vrf
 }
