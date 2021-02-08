@@ -7,6 +7,8 @@ terraform {
   }
 }
 
+variable AWS_SYD {}
+
 ### Shared Data Sources ###
 data "mso_tenant" "Production" {
   name = "Production"

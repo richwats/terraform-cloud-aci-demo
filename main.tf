@@ -73,7 +73,8 @@ module "cloud-aci" {
 
 module "app-k8s" {
   source = "./modules/apps/k8s"
-  inputTest = module.cloud-aci.AWS_SYD
+
+  AWS_SYD = module.cloud-aci.AWS_SYD
 }
 
 # module "app-wordpress" {
