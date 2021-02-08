@@ -66,35 +66,37 @@ provider "aws" {
 
 ### Nested Modules ###
 
+## Common Setup - Schema, Template, VRFs etc
 module "cloud-aci" {
   source = "./modules/mso"
-
 }
 
 module "app-k8s" {
   source = "./modules/apps/k8s"
-
 }
+
 module "app-wordpress" {
   source = "./modules/apps/wordpress"
-
 }
 
-### TRIGGER DEPLOY
+# ### TRIGGER DEPLOY
+#
+# ## AWS
+# resource "mso_schema_template_deploy" "aws_syd" {
+#   schema_id     = module.cloud-aci.schema-prod.tf-hybrid-cloud.id
+#   template_name = module.cloud-aci.schema-prod.tf-hybrid-cloud.template_name
+#   site_id       = module.cloud-aci.AWS-SYD.id
+#   undeploy      = false
+# }
 
-## AWS
-resource "mso_schema_template_deploy" "aws_syd" {
-  schema_id     = module.mso.mso_schema.tf-hybrid-cloud.id
-  template_name = module.mso.mso_schema.tf-hybrid-cloud.template_name
-  site_id       = module.mso.mso_site.AWS-SYD.id
-  undeploy      = false
+output "test3" {
+  value = module.app-wordpress.test-schema
 }
 
-
-output "test1" {
-  value = module.cloud-aci.aws-syd-prod-vrf
-}
-
-output "test2" {
-  value = module.cloud-aci.aws-syd-reg
-}
+# output "test1" {
+#   value = module.cloud-aci.aws-syd-prod-vrf
+# }
+#
+# output "test2" {
+#   value = module.cloud-aci.aws-syd-reg
+# }
