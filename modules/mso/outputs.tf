@@ -34,3 +34,7 @@ output "aws-syd" {
 output "azure-mel" {
   value = data.mso_site.AZURE-MEL
 }
+
+# output "template-prod-name" {
+#   value = mso_schema.tf-hybrid-cloud.template_name
+# }

@@ -21,56 +21,62 @@ data "mso_site" "AZURE-MEL" {
   name  = "AZURE-MEL"
 }
 
-### Shared Schema & VRF Details
+### Common Schema
 data "mso_schema" "tf-hybrid-cloud" {
   name          = "tf-hybrid-cloud"
+}
+
+### Common Template
+data "mso_schema_template" "tf-hc-prod" {
+  name        = "tf-hc-prod"
+  schema_id   = data.mso_schema.tf-hybrid-cloud.id
 }
 
 ### Common Production VRF
 data "mso_schema_template_vrf" "tf-hc-prod"  {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
-  template        = data.mso_schema.tf-hybrid-cloud.template_name
+  template        = data.mso_schema_template.tf-hc-prod.name
   name            = "tf-hc-prod"
 }
 ## Load Common ExEPGs
 data "mso_schema_template_external_epg" "tf-public" {
   schema_id           = data.mso_schema.tf-hybrid-cloud.id
-  template_name       = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name       = data.mso_schema_template.tf-hc-prod.name
   external_epg_name   = "tf-public"
 }
 
 ## Load Common Contract
 data "mso_schema_template_contract" "tf-servers-to-inet" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-servers-to-inet"
 }
 
 ## Load Common Filters
 data "mso_schema_template_filter_entry" "tf-allow-any" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-any"
   entry_name            = "any"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-http" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-http"
   entry_name            = "http"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-icmp" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-icmp"
   entry_name            = "icmp"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-ssh" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-ssh"
   entry_name            = "ssh"
 }
@@ -98,7 +104,7 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
 ## Create New Subnets for K8S Applciation
 resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template_name = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name = data.mso_schema_template.tf-hc-prod.name
   site_id       = data.mso_site.AWS-SYD.id
   vrf_name      = "tf-hc-prod"
   region_name   = "ap-southeast-2"
@@ -110,7 +116,7 @@ resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-1" {
 
 resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-2" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template_name = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name = data.mso_schema_template.tf-hc-prod.name
   site_id       = data.mso_site.AWS-SYD.id
   vrf_name      = "tf-hc-prod"
   region_name   = "ap-southeast-2"
@@ -124,7 +130,7 @@ resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-2" {
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   site_id       = data.mso_site.AWS-SYD.id
-  template_name = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name = data.mso_schema_template.tf-hc-prod.name
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
   name          = "tf-aws-subnet-5"
@@ -139,7 +145,7 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   site_id       = data.mso_site.AWS-SYD.id
-  template_name = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name = data.mso_schema_template.tf-hc-prod.name
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
   name          = "tf-aws-subnet-6"
@@ -154,7 +160,8 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
 ### Application Network Profile ###
 resource "mso_schema_template_anp" "tf-k8s-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template      = data.mso_schema.tf-hybrid-cloud.template_name
+  # template      = data.mso_schema.tf-hybrid-cloud.template_name
+  template      = data.mso_schema_template.tf-hc-prod.name
   name          = "tf-k8s-1"
   display_name  = "Terraform K8S Demo 1"
 }
@@ -162,7 +169,7 @@ resource "mso_schema_template_anp" "tf-k8s-1" {
 ### Ex EPGs to Contracts ###
 resource "mso_schema_template_external_epg_contract" "tf-public-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
   relationship_type = "consumer"
@@ -171,7 +178,7 @@ resource "mso_schema_template_external_epg_contract" "tf-public-1" {
 ### App EPGs
 resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   schema_id                   = data.mso_schema.tf-hybrid-cloud.id
-  template_name               = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name               = data.mso_schema_template.tf-hc-prod.name
   anp_name                    = mso_schema_template_anp.tf-k8s-1.name
   name                        = "tf-k8s-worker"
   bd_name                     = "unspecified"
@@ -182,7 +189,7 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
 ### App EPG to Contracts ###
 resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
@@ -191,7 +198,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
@@ -201,7 +208,8 @@ resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
 ### Contracts ###
 resource "mso_schema_template_contract" "tf-inet-to-k8s" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  # template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-inet-to-k8s"
   display_name            = "Internet to K8S Workers"
   filter_type             = "bothWay"

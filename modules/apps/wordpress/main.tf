@@ -20,64 +20,70 @@ data "mso_site" "AZURE-MEL" {
   name  = "AZURE-MEL"
 }
 
-### Shared Schema & VRF Details
+### Common Schema
 data "mso_schema" "tf-hybrid-cloud" {
   name          = "tf-hybrid-cloud"
+}
+
+### Common Template
+data "mso_schema_template" "tf-hc-prod" {
+  name        = "tf-hc-prod"
+  schema_id   = data.mso_schema.tf-hybrid-cloud.id
 }
 
 ### Common Production VRF
 data "mso_schema_template_vrf" "tf-hc-prod"  {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
-  template        = data.mso_schema.tf-hybrid-cloud.template_name
+  template        = data.mso_schema_template.tf-hc-prod.name
   name            = "tf-hc-prod"
 }
 
 ## Load Common ExEPGs
 data "mso_schema_template_external_epg" "tf-public" {
   schema_id           = data.mso_schema.tf-hybrid-cloud.id
-  template_name       = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name       = data.mso_schema_template.tf-hc-prod.name
   external_epg_name   = "tf-public"
 }
 
 ## Load Common Contract
 data "mso_schema_template_contract" "tf-servers-to-inet" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-servers-to-inet"
 }
 
 ## Load Common Filters
 data "mso_schema_template_filter_entry" "tf-allow-any" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-any"
   entry_name            = "any"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-http" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-http"
   entry_name            = "http"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-icmp" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-icmp"
   entry_name            = "icmp"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-ssh" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-ssh"
   entry_name            = "ssh"
 }
 
 data "mso_schema_template_filter_entry" "tf-allow-mysql" {
   schema_id             = data.mso_schema.tf-hybrid-cloud.id
-  template_name         = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name         = data.mso_schema_template.tf-hc-prod.name
   name                  = "tf-allow-mysql"
   entry_name            = "mysql"
 }
@@ -131,7 +137,7 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
 ### Application Network Profile ###
 resource "mso_schema_template_anp" "tf-demo-app-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template      = data.mso_schema.tf-hybrid-cloud.template_name
+  template      = data.mso_schema_template.tf-hc-prod.name
   name          = "tf-demo-app-1"
   display_name  = "Terraform Demo App 1"
 }
@@ -140,7 +146,7 @@ resource "mso_schema_template_anp" "tf-demo-app-1" {
 ### App EPGs
 resource "mso_schema_template_anp_epg" "tf-wordpress" {
   schema_id                   = data.mso_schema.tf-hybrid-cloud.id
-  template_name               = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name               = data.mso_schema_template.tf-hc-prod.name
   anp_name                    = mso_schema_template_anp.tf-demo-app-1.name
   name                        = "tf-wordpress"
   bd_name                     = "unspecified"
@@ -150,7 +156,7 @@ resource "mso_schema_template_anp_epg" "tf-wordpress" {
 
 resource "mso_schema_template_anp_epg_selector" "tf-wordpress" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template_name = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name = data.mso_schema_template.tf-hc-prod.name
   anp_name      = mso_schema_template_anp.tf-demo-app-1.name
   epg_name      = mso_schema_template_anp_epg.tf-wordpress.name
   name          = "tf-wordpress"
@@ -163,7 +169,7 @@ resource "mso_schema_template_anp_epg_selector" "tf-wordpress" {
 
 resource "mso_schema_template_anp_epg" "tf-mariadb" {
   schema_id                   = data.mso_schema.tf-hybrid-cloud.id
-  template_name               = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name               = data.mso_schema_template.tf-hc-prod.name
   anp_name                    = mso_schema_template_anp.tf-demo-app-1.name
   name                        = "tf-mariadb"
   bd_name                     = "unspecified"
@@ -173,7 +179,7 @@ resource "mso_schema_template_anp_epg" "tf-mariadb" {
 
 resource "mso_schema_template_anp_epg_selector" "tf-mariadb" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-  template_name = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name = data.mso_schema_template.tf-hc-prod.name
   anp_name      = mso_schema_template_anp.tf-demo-app-1.name
   epg_name      = mso_schema_template_anp_epg.tf-mariadb.name
   name          = "tf-mariadb"
@@ -187,7 +193,7 @@ resource "mso_schema_template_anp_epg_selector" "tf-mariadb" {
 ### Contracts ###
 resource "mso_schema_template_contract" "tf-inet-to-wordpress" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-inet-to-wordpress"
   display_name            = "Internet to WordPress"
   filter_type             = "bothWay"
@@ -202,7 +208,7 @@ resource "mso_schema_template_contract" "tf-inet-to-wordpress" {
 
 resource "mso_schema_template_contract_filter" "tf-inet-to-wordpress-2" {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
-  template_name   = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name   = data.mso_schema_template.tf-hc-prod.name
   contract_name   = mso_schema_template_contract.tf-inet-to-wordpress.contract_name
   filter_type     = "bothWay"
   filter_name     = data.mso_schema_template_filter_entry.tf-allow-ssh.name
@@ -211,7 +217,7 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-wordpress-2" {
 
 resource "mso_schema_template_contract_filter" "tf-inet-to-wordpress-3" {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
-  template_name   = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name   = data.mso_schema_template.tf-hc-prod.name
   contract_name   = mso_schema_template_contract.tf-inet-to-wordpress.contract_name
   filter_type     = "bothWay"
   filter_name     = data.mso_schema_template_filter_entry.tf-allow-http.name
@@ -220,7 +226,7 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-wordpress-3" {
 
 resource "mso_schema_template_contract" "tf-inet-to-mariadb" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-inet-to-mariadb"
   display_name            = "Internet to MariaDB"
   filter_type             = "bothWay"
@@ -235,7 +241,7 @@ resource "mso_schema_template_contract" "tf-inet-to-mariadb" {
 
 resource "mso_schema_template_contract_filter" "tf-inet-to-mariadb-2" {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
-  template_name   = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name   = data.mso_schema_template.tf-hc-prod.name
   contract_name   = mso_schema_template_contract.tf-inet-to-mariadb.contract_name
   filter_type     = "bothWay"
   filter_name     = data.mso_schema_template_filter_entry.tf-allow-ssh.name
@@ -244,7 +250,7 @@ resource "mso_schema_template_contract_filter" "tf-inet-to-mariadb-2" {
 
 resource "mso_schema_template_contract" "tf-servers-to-inet" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-servers-to-inet"
   display_name            = "Servers to Internet"
   filter_type             = "bothWay"
@@ -259,7 +265,7 @@ resource "mso_schema_template_contract" "tf-servers-to-inet" {
 
 resource "mso_schema_template_contract" "tf-wordpress-to-mariadb" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  template_name           = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
   contract_name           = "tf-wordpress-to-mariadb"
   display_name            = "WordPress to MariaDB"
   filter_type             = "bothWay"
@@ -274,7 +280,7 @@ resource "mso_schema_template_contract" "tf-wordpress-to-mariadb" {
 
 resource "mso_schema_template_contract_filter" "tf-wordpress-to-mariadb-2" {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
-  template_name   = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name   = data.mso_schema_template.tf-hc-prod.name
   contract_name   = mso_schema_template_contract.tf-wordpress-to-mariadb.contract_name
   filter_type     = "bothWay"
   filter_name     = data.mso_schema_template_filter_entry.tf-allow-mysql.name
@@ -284,7 +290,7 @@ resource "mso_schema_template_contract_filter" "tf-wordpress-to-mariadb-2" {
 ### ExEPGs to Contracts
 resource "mso_schema_template_external_epg_contract" "tf-public-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   contract_name     = mso_schema_template_contract.tf-inet-to-wordpress.contract_name
   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
   relationship_type = "consumer"
@@ -292,7 +298,7 @@ resource "mso_schema_template_external_epg_contract" "tf-public-1" {
 
 resource "mso_schema_template_external_epg_contract" "tf-public-2" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   contract_name     = mso_schema_template_contract.tf-inet-to-mariadb.contract_name
   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
   relationship_type = "consumer"
@@ -300,7 +306,7 @@ resource "mso_schema_template_external_epg_contract" "tf-public-2" {
 
 resource "mso_schema_template_external_epg_contract" "tf-public-3" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   contract_name     = mso_schema_template_contract.tf-servers-to-inet.contract_name
   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
   relationship_type = "provider"
@@ -309,7 +315,7 @@ resource "mso_schema_template_external_epg_contract" "tf-public-3" {
 ### App EPG to Contracts ###
 resource "mso_schema_template_anp_epg_contract" "tf-wordpress-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
   epg_name          = mso_schema_template_anp_epg.tf-wordpress.name
   contract_name     = mso_schema_template_contract.tf-inet-to-wordpress.contract_name
@@ -318,7 +324,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-wordpress-1" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-wordpress-2" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
   epg_name          = mso_schema_template_anp_epg.tf-wordpress.name
   contract_name     = mso_schema_template_contract.tf-wordpress-to-mariadb.contract_name
@@ -327,7 +333,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-wordpress-2" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-wordpress-3" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
   epg_name          = mso_schema_template_anp_epg.tf-wordpress.name
   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
@@ -336,7 +342,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-wordpress-3" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-mariadb-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
   epg_name          = mso_schema_template_anp_epg.tf-mariadb.name
   contract_name     = mso_schema_template_contract.tf-inet-to-mariadb.contract_name
@@ -345,7 +351,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-mariadb-1" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-mariadb-2" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
   epg_name          = mso_schema_template_anp_epg.tf-mariadb.name
   contract_name     = mso_schema_template_contract.tf-wordpress-to-mariadb.contract_name
@@ -354,7 +360,7 @@ resource "mso_schema_template_anp_epg_contract" "tf-mariadb-2" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-mariadb-3" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema.tf-hybrid-cloud.template_name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
   anp_name          = mso_schema_template_anp.tf-demo-app-1.name
   epg_name          = mso_schema_template_anp_epg.tf-mariadb.name
   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
