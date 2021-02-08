@@ -75,9 +75,9 @@ module "app-k8s" {
   source = "./modules/apps/k8s"
 }
 
-module "app-wordpress" {
-  source = "./modules/apps/wordpress"
-}
+# module "app-wordpress" {
+#   source = "./modules/apps/wordpress"
+# }
 
 # ### TRIGGER DEPLOY
 #
