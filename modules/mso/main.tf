@@ -147,7 +147,17 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
   depends_on = [mso_rest.vrf-workaround]
 }
 
+
 ### Common ExEPGs
+
+### ExEPG Needs ANP First...
+resource "mso_schema_template_anp" "tf-shared" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  template      = data.mso_schema_template.tf-hc-prod.name
+  name          = "tf-shared"
+  display_name  = "Terraform Shared Services"
+}
+
 ## Doesn't work until VRF configured per Site
 resource "mso_schema_template_external_epg" "tf-public" {
   schema_id           = mso_schema.tf-hybrid-cloud.id
@@ -156,7 +166,7 @@ resource "mso_schema_template_external_epg" "tf-public" {
   external_epg_type   = "cloud"
   display_name        = "Public Internet"
   vrf_name            = mso_schema_template_vrf.tf-hc-prod.name
-  # anp_name            = mso_schema_template_anp.tf-demo-app-1.name
+  anp_name            = mso_schema_template_anp.tf-shared.name
   # l3out_name          = "temp"
   site_id             = [data.mso_site.AWS-SYD.id]
   selector_name       = "tf-inet"
