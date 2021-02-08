@@ -73,6 +73,7 @@ module "cloud-aci" {
 
 module "app-k8s" {
   source = "./modules/apps/k8s"
+  inputTest = module.cloud-aci.AWS_SYD
 }
 
 # module "app-wordpress" {
@@ -88,7 +89,7 @@ module "app-k8s" {
 #   site_id       = module.cloud-aci.AWS-SYD.id
 #   undeploy      = false
 # }
-# 
+#
 # output "test3" {
 #   value = module.app-wordpress.test-schema
 # }
