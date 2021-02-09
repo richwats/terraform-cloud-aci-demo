@@ -284,9 +284,9 @@ resource "mso_schema_template_filter_entry" "tf-allow-ssh" {
 
 ### Ex EPGs to Contracts ###
 resource "mso_schema_template_external_epg_contract" "tf-public-1" {
-  schema_id         = mso_schema.tf-hybrid-cloud.id
-  template_name     = mso_schema_template.tf-hc-prod.name
-  contract_name     = mso_schema_template_contract.tf-servers-to-inet.contract_name
-  external_epg_name = mso_schema_template_external_epg.tf-public.external_epg_name
-  relationship_type = "provider"
+  schema_id             = mso_schema.tf-hybrid-cloud.id
+  template_name         = mso_schema.tf-hybrid-cloud.template_name
+  contract_name         = mso_schema_template_contract.tf-servers-to-inet.contract_name
+  external_epg_name     = mso_schema_template_external_epg.tf-public.external_epg_name
+  relationship_type     = "provider"
 }
