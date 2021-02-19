@@ -176,8 +176,13 @@ resource "mso_rest" "vrf-workaround-azure" {
             ],
             "associatedRegion": "australiasoutheast"
           }],
+          "cloudRsCtxProfileToGatewayRouterP": {
+                "name": "default",
+                "tenantName": "infra"
+              },
           "isVpnGatewayRouter": false,
-          "hubnetworkPeering": true
+          "isTGWAttachment": true,
+          "hubnetworkPeering": false
         }]
       }],
       "intersiteL3outs": null
