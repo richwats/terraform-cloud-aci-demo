@@ -96,7 +96,6 @@ resource "mso_schema_template_deploy" "aws_syd" {
   depends_on = [
     module.cloud-aci,
     module.app-k8s,
-    module.app-k8s.mso_schema_template_anp_epg_contract.tf-k8s-worker-1
   ]
 }
 #
