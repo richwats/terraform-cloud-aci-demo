@@ -156,12 +156,12 @@ resource "mso_rest" "vrf-workaround-azure" {
               {
               "ip": "10.112.1.0/24",
               "zone": "",
-              "name": "",
+              "name": ""
               },
               {
               "ip": "10.112.2.0/24",
               "zone": "",
-              "name": "",
+              "name": ""
               },
               {
               "ip": "10.112.3.0/24",
