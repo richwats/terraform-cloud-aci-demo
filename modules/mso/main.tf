@@ -64,7 +64,7 @@ PROVDER BROKEN - Can't add site to template, vrf needs region, not set, shouldn'
 # }
 
 ## AWS VRF WORKAROUND
-resource "mso_rest" "vrf-workaround" {
+resource "mso_rest" "vrf-workaround-aws" {
     path = "api/v1/schemas/${mso_schema.tf-hybrid-cloud.id}"
     method = "PATCH"
     payload = <<EOF
@@ -128,6 +128,66 @@ resource "mso_rest" "vrf-workaround" {
 EOF
 
 }
+
+## AZURE VRF WORKAROUND
+resource "mso_rest" "vrf-workaround-azure" {
+    path = "api/v1/schemas/${mso_schema.tf-hybrid-cloud.id}"
+    method = "PATCH"
+    payload = <<EOF
+[
+  {
+    "op": "add",
+    "path": "/sites/-",
+    "value": {
+      "siteId": "${data.mso_site.AZURE-MEL.id}",
+      "templateName": "${mso_schema.tf-hybrid-cloud.template_name}",
+      "vrfs": [{
+        "vrfRef": {
+          "schemaId": "${mso_schema.tf-hybrid-cloud.id}",
+          "templateName": "${mso_schema.tf-hybrid-cloud.template_name}",
+          "vrfName": "${mso_schema_template_vrf.tf-hc-prod.name}"
+        },
+        "regions": [{
+          "name": "australiasoutheast",
+          "cidrs": [{
+            "ip": "10.112.0.0/16",
+            "primary": true,
+            "subnets": [
+              {
+              "ip": "10.112.1.0/24",
+              "zone": "",
+              "name": "",
+              },
+              {
+              "ip": "10.112.2.0/24",
+              "zone": "",
+              "name": "",
+              },
+              {
+              "ip": "10.111.3.0/24",
+              "zone": "",
+              "name": ""
+              },
+              {
+              "ip": "10.111.4.0/24",
+              "zone": "",
+              "name": ""
+              }
+            ],
+            "associatedRegion": "australiasoutheast"
+          }],
+          "isVpnGatewayRouter": false,
+          "hubnetworkPeering": true
+        }]
+      }],
+      "intersiteL3outs": null
+    }
+  }
+]
+EOF
+
+}
+
 
 ### Load VRF as Data ###
 data "mso_schema_site_vrf" "tf-hc-prod-aws" {
