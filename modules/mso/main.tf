@@ -164,12 +164,12 @@ resource "mso_rest" "vrf-workaround-azure" {
               "name": "",
               },
               {
-              "ip": "10.111.3.0/24",
+              "ip": "10.112.3.0/24",
               "zone": "",
               "name": ""
               },
               {
-              "ip": "10.111.4.0/24",
+              "ip": "10.112.4.0/24",
               "zone": "",
               "name": ""
               }
@@ -195,7 +195,7 @@ data "mso_schema_site_vrf" "tf-hc-prod-aws" {
   schema_id = mso_schema.tf-hybrid-cloud.id
   vrf_name  = mso_schema_template_vrf.tf-hc-prod.name
 
-  depends_on = [mso_rest.vrf-workaround]
+  depends_on = [mso_rest.vrf-workaround-aws]
 }
 
 data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
@@ -204,7 +204,7 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
   vrf_name      = mso_schema_template_vrf.tf-hc-prod.name
   region_name   = "ap-southeast-2"
 
-  depends_on = [mso_rest.vrf-workaround]
+  depends_on = [mso_rest.vrf-workaround-aws]
 }
 
 
@@ -233,7 +233,7 @@ resource "mso_schema_template_external_epg" "tf-public" {
   selector_ip         = "0.0.0.0/0"
 
   depends_on = [
-    mso_rest.vrf-workaround
+    mso_rest.vrf-workaround-aws
   ]
 }
 
