@@ -216,8 +216,8 @@ resource "mso_schema_template_deploy" "aws_syd" {
 ### Ex EPGs to Contracts ###
 resource "mso_schema_template_external_epg_contract" "tf-public-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name = data.mso_schema_template.tf-hc-prod.name
-  template_name     = mso_schema_template.tf-k8s-eks.name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
+  # template_name     = mso_schema_template.tf-k8s-eks.name
   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
   relationship_type = "consumer"
