@@ -258,8 +258,8 @@ resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
 ### Contracts ###
 resource "mso_schema_template_contract" "tf-inet-to-k8s" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  # template_name = data.mso_schema_template.tf-hc-prod.name
-  template_name           = mso_schema_template.tf-k8s-eks.name
+  template_name           = data.mso_schema_template.tf-hc-prod.name
+  # template_name           = mso_schema_template.tf-k8s-eks.name
   contract_name           = "tf-inet-to-k8s"
   display_name            = "Internet to K8S Workers"
   filter_type             = "bothWay"
