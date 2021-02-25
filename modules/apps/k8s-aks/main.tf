@@ -157,23 +157,159 @@ resource "mso_schema_template_anp" "tf-aks-1" {
 
 /*
 
-Error: "Resource Not Found: AnpDelta with name tf-aks-1 not found in List()"{}
+{
+  "name": "string",
+  "displayName": "string",
+  "epgRef": {
+    "schemaId": "string",
+    "templateName": "string",
+    "anpName": "string",
+    "epgName": "string"
+  },
+  "contractRelationships": [
+    {
+      "relationshipType": {},
+      "contractRef": {
+        "schemaId": "string",
+        "templateName": "string",
+        "contractName": "string"
+      }
+    }
+  ],
+  "subnets": [
+    {
+      "ip": "string",
+      "description": "string",
+      "scope": {},
+      "shared": false,
+      "querier": 0,
+      "noDefaultGateway": 0,
+      "virtual": 0
+    }
+  ],
+  "uSegEpg": 0,
+  "uSegAttrs": [
+    {
+      "name": "string",
+      "displayName": "string",
+      "description": "string",
+      "type": {},
+      "fvSubnet": 0,
+      "operator": {},
+      "category": "string",
+      "value": "string"
+    }
+  ],
+  "intraEpg": {},
+  "prio": "string",
+  "proxyArp": 0,
+  "mCastSource": 0,
+  "preferredGroup": 0,
+  "bdRef": {
+    "schemaId": "string",
+    "templateName": "string",
+    "bdName": "string"
+  },
+  "vrfRef": {
+    "schemaId": "string",
+    "templateName": "string",
+    "vrfName": "string"
+  },
+  "selectors": [
+    {
+      "name": "string",
+      "expressions": [
+        {
+          "key": "string",
+          "operator": {},
+          "value": "string"
+        }
+      ],
+      "ips": [
+        "string"
+      ]
+    }
+  ],
+  "epgType": {},
+  "cloudServiceEpgConfig": {
+    "serviceType": {},
+    "deploymentType": {},
+    "accessType": {},
+    "customSvcType": "string"
+  }
+}
 
-  on modules/apps/k8s-aks/main.tf line 192, in resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1":
- 192: resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
 
-
-
-Error: "Resource Not Found: AnpDelta with name tf-aks-1 not found in List()"{}
-
-  on modules/apps/k8s-aks/main.tf line 210, in resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2":
- 210: resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
-
-
-
-- Deploy First?
+epg": {
+    "name": "TestSvcEPG",
+    "displayName": "TestSvcEPG",
+    "epgRef": "/schemas/6020c62c3a00001d0f5372e1/templates/tf-aks/anps/tf-aks-1/epgs/TestSvcEPG",
+    "contractRelationships": [],
+    "subnets": [],
+    "uSegEpg": false,
+    "uSegAttrs": [],
+    "intraEpg": "unenforced",
+    "prio": "unspecified",
+    "proxyArp": false,
+    "preferredGroup": false,
+    "bdRef": "",
+    "vrfRef": "/schemas/6020c62c3a00001d0f5372e1/templates/tf-hc-prod/vrfs/tf-hc-prod",
+    "selectors": [],
+    "epgType": "service",
+    "cloudServiceEpgConfig": {
+      "serviceType": "Azure-AksCluster",
+      "deploymentType": "CloudNativeManaged",
+      "accessType": "PublicAndPrivate"
+    }
+  }
 
 */
+
+
+resource "mso_rest" "service-epg-workaround-azure" {
+    path = "api/v1/schemas/${mso_schema.tf-hybrid-cloud.id}"
+    method = "PATCH"
+    payload = <<EOF
+[
+  {
+    "op": "add",
+    "path": "/templates/${mso_schema.tf-hybrid-cloud.template_name}/anps/${mso_schema_template_anp.tf-aks-1.name}/epgs/-",
+    "value":
+    {
+      "name": "tf-svc-aks",
+      "displayName": "tf-svc-aks",
+      "epgRef": {
+        "schemaId": "${mso_schema.tf-hybrid-cloud.id}",
+        "templateName": "${mso_schema.tf-hybrid-cloud.template_name}",
+        "anpName": "${mso_schema_template_anp.tf-aks-1.name}",
+        "epgName": "tf-svc-aks"
+      },
+      "contractRelationships": [],
+      "subnets": [],
+      "uSegEpg": false,
+      "uSegAttrs": [],
+      "intraEpg": "unenforced",
+      "prio": "unspecified",
+      "proxyArp": false,
+      "preferredGroup": false,
+      "bdRef": "",
+      "vrfRef": {
+        "schemaId": "${mso_schema.tf-hybrid-cloud.id}",
+        "templateName": "${mso_schema.tf-hybrid-cloud.template_name}",
+        "vrfName": "${mso_schema_template_vrf.tf-hc-prod.name}"
+      },
+      "selectors": [],
+      "epgType": "service",
+      "cloudServiceEpgConfig": {
+        "serviceType": "Azure-AksCluster",
+        "deploymentType": "CloudNativeManaged",
+        "accessType": "PublicAndPrivate"
+      }
+    }
+]
+EOF
+
+}
 
 # ## Force Deploy to Azure ##
 # resource "mso_schema_template_deploy" "azure_mel_before" {
