@@ -111,7 +111,7 @@ resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-az-mel-1" {
   region_name   = "australiasoutheast"
   cidr_ip       = "10.112.0.0/16"
   ip            = "10.112.5.0/24"
-  zone          = ""
+  zone          = "1"
   usage         = "AKS"
 }
 
@@ -123,7 +123,7 @@ resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-az-mel-2" {
   region_name   = "australiasoutheast"
   cidr_ip       = "10.112.0.0/16"
   ip            = "10.112.6.0/24"
-  zone          = ""
+  zone          = "2"
   usage         = "AKS"
 }
 
@@ -145,10 +145,10 @@ resource "mso_schema_template" "tf-k8s-aks" {
 
 
 ### Application Network Profile ###
-resource "mso_schema_template_anp" "tf-k8s-1" {
+resource "mso_schema_template_anp" "tf-aks-1" {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
   # template      = data.mso_schema.tf-hybrid-cloud.template_name
-  template_name   = mso_schema_template.tf-k8s-aks.name
+  template        = mso_schema_template.tf-k8s-aks.name
   name            = "tf-aks-1"
   display_name    = "Terraform K8S AKS Demo 1"
 }
@@ -226,29 +226,31 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
 }
 
 ### App EPG to Contracts ###
+# Configured by AWS K8S
+
 # - Need "contract_template_name"
-
-resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
-  schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name     = data.mso_schema_template.tf-hc-prod.name
-  template_name     = mso_schema_template.tf-k8s-aks.name
-  anp_name          = mso_schema_template_anp.tf-aks-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
-  contract_template_name = data.mso_schema_template.tf-hc-prod.name
-  relationship_type = "consumer"
-}
-
-resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
-  schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name     = data.mso_schema_template.tf-hc-prod.name
-  template_name     = mso_schema_template.tf-k8s-aks.name
-  anp_name          = mso_schema_template_anp.tf-aks-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  contract_template_name = data.mso_schema_template.tf-hc-prod.name
-  relationship_type = "provider"
-}
+#
+# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
+#   schema_id         = data.mso_schema.tf-hybrid-cloud.id
+#   # template_name     = data.mso_schema_template.tf-hc-prod.name
+#   template_name     = mso_schema_template.tf-k8s-aks.name
+#   anp_name          = mso_schema_template_anp.tf-aks-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
+#   contract_template_name = data.mso_schema_template.tf-hc-prod.name
+#   relationship_type = "consumer"
+# }
+#
+# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+#   schema_id         = data.mso_schema.tf-hybrid-cloud.id
+#   # template_name     = data.mso_schema_template.tf-hc-prod.name
+#   template_name     = mso_schema_template.tf-k8s-aks.name
+#   anp_name          = mso_schema_template_anp.tf-aks-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   contract_template_name = data.mso_schema_template.tf-hc-prod.name
+#   relationship_type = "provider"
+# }
 
 # ### Contracts ###
 # Configured by AWS K8S
