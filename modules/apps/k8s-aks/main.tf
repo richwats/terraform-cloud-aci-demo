@@ -267,20 +267,20 @@ epg": {
 
 
 resource "mso_rest" "service-epg-workaround-azure" {
-    path = "api/v1/schemas/${mso_schema.tf-hybrid-cloud.id}"
+    path = "api/v1/schemas/${data.mso_schema.tf-hybrid-cloud.id}"
     method = "PATCH"
     payload = <<EOF
 [
   {
     "op": "add",
-    "path": "/templates/${mso_schema.tf-hybrid-cloud.template_name}/anps/${mso_schema_template_anp.tf-aks-1.name}/epgs/-",
+    "path": "/templates/${mso_schema_template.tf-k8s-aks.name}/anps/${mso_schema_template_anp.tf-aks-1.name}/epgs/-",
     "value":
     {
       "name": "tf-svc-aks",
       "displayName": "tf-svc-aks",
       "epgRef": {
-        "schemaId": "${mso_schema.tf-hybrid-cloud.id}",
-        "templateName": "${mso_schema.tf-hybrid-cloud.template_name}",
+        "schemaId": "${data.mso_schema.tf-hybrid-cloud.id}",
+        "templateName": "${mso_schema_template.tf-k8s-aks.name}",
         "anpName": "${mso_schema_template_anp.tf-aks-1.name}",
         "epgName": "tf-svc-aks"
       },
@@ -294,9 +294,9 @@ resource "mso_rest" "service-epg-workaround-azure" {
       "preferredGroup": false,
       "bdRef": "",
       "vrfRef": {
-        "schemaId": "${mso_schema.tf-hybrid-cloud.id}",
-        "templateName": "${mso_schema.tf-hybrid-cloud.template_name}",
-        "vrfName": "${mso_schema_template_vrf.tf-hc-prod.name}"
+        "schemaId": "${data.mso_schema.tf-hybrid-cloud.id}",
+        "templateName": "${data.mso_schema_template.tf-hc-prod.name}",
+        "vrfName": "${data.mso_schema_template_vrf.tf-hc-prod.name}"
       },
       "selectors": [],
       "epgType": "service",
