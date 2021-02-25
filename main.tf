@@ -78,7 +78,7 @@ module "app-k8s-eks" {
 }
 
 module "app-k8s-aks" {
-  source = "./modules/apps/k8s-eks"
+  source = "./modules/apps/k8s-aks"
   # schema_prod = module.cloud-aci.aws-syd-prod-vrf
   depends_on = [module.cloud-aci]
 }
@@ -113,7 +113,7 @@ resource "mso_schema_template_deploy" "aws_syd" {
     module.app-k8s-aks,
   ]
 }
-#
+
 # output "test3" {
 #   value = module.app-wordpress.test-schema
 # }
