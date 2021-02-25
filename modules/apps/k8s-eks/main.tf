@@ -242,8 +242,8 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
 ### App EPG to Contracts ###
 resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name = data.mso_schema_template.tf-hc-prod.name
-  template_name = mso_schema_template.tf-k8s-eks.name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
+  # template_name     = mso_schema_template.tf-k8s-eks.name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
@@ -261,8 +261,8 @@ resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name = data.mso_schema_template.tf-hc-prod.name
-  template_name = mso_schema_template.tf-k8s-eks.name
+  template_name     = data.mso_schema_template.tf-hc-prod.name
+  # template_name     = mso_schema_template.tf-k8s-eks.name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
