@@ -306,6 +306,7 @@ resource "mso_rest" "service-epg-workaround-azure" {
         "accessType": "PublicAndPrivate"
       }
     }
+  }
 ]
 EOF
 
