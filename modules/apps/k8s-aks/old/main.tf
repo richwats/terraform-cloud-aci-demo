@@ -175,125 +175,125 @@ Error: "Resource Not Found: AnpDelta with name tf-aks-1 not found in List()"{}
 
 */
 
-# ## Force Deploy to Azure ##
-# resource "mso_schema_template_deploy" "azure_mel_before" {
-#   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-#   template_name = mso_schema_template.tf-k8s-aks.name
+## Force Deploy to Azure ##
+resource "mso_schema_template_deploy" "azure_mel_before" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema_template.tf-k8s-aks.name
+}
+
+resource "mso_schema_template_deploy" "azure_mel_after" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema_template.tf-k8s-aks.name
+
+  depends_on = [
+    mso_schema_site_anp_epg_selector.tf-k8s-worker-1,
+    mso_schema_site_anp_epg_selector.tf-k8s-worker-2
+  ]
+}
+
+resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  site_id       = data.mso_site.AZURE-MEL.id
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-aks.name
+  anp_name      = mso_schema_template_anp.tf-aks-1.name
+  epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
+  name          = "tf-azure-sub-5"
+  expressions {
+    key         = "ipAddress"
+    operator    = "equals"
+    value       = "10.112.5.0/24"
+  }
+  depends_on = [
+    mso_schema_template_deploy.azure_mel_before
+  ]
+}
+
+resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  site_id       = data.mso_site.AZURE-MEL.id
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-aks.name
+  anp_name      = mso_schema_template_anp.tf-aks-1.name
+  epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
+  name          = "tf-azure-sub-6"
+  expressions {
+    key         = "ipAddress"
+    operator    = "equals"
+    value       = "10.112.6.0/24"
+  }
+  depends_on = [
+    mso_schema_template_deploy.azure_mel_before
+  ]
+}
+
+# ### Ex EPGs to Contracts ###
+# Configured by AWS K8S
+
+# resource "mso_schema_template_external_epg_contract" "tf-public-1" {
+#   schema_id         = data.mso_schema.tf-hybrid-cloud.id
+#   template_name     = data.mso_schema_template.tf-hc-prod.name
+#   # template_name     = mso_schema_template.tf-k8s-aks.name
+#   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
+#   relationship_type = "consumer"
+# }
+
+### App EPGs
+resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
+  schema_id                   = data.mso_schema.tf-hybrid-cloud.id
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name               = mso_schema_template.tf-k8s-aks.name
+  anp_name                    = mso_schema_template_anp.tf-aks-1.name
+  name                        = "tf-k8s-worker"
+  bd_name                     = "unspecified"
+  vrf_name                    = data.mso_schema_template_vrf.tf-hc-prod.name
+  vrf_template_name           = data.mso_schema_template.tf-hc-prod.name
+  display_name                = "K8S Worker Node"
+}
+
+### App EPG to Contracts ###
+# Configured by AWS K8S
+
+# - Need "contract_template_name"
+#
+# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
+#   schema_id         = data.mso_schema.tf-hybrid-cloud.id
+#   # template_name     = data.mso_schema_template.tf-hc-prod.name
+#   template_name     = mso_schema_template.tf-k8s-aks.name
+#   anp_name          = mso_schema_template_anp.tf-aks-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
+#   contract_template_name = data.mso_schema_template.tf-hc-prod.name
+#   relationship_type = "consumer"
 # }
 #
-# resource "mso_schema_template_deploy" "azure_mel_after" {
-#   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-#   template_name = mso_schema_template.tf-k8s-aks.name
-#
-#   depends_on = [
-#     mso_schema_site_anp_epg_selector.tf-k8s-worker-1,
-#     mso_schema_site_anp_epg_selector.tf-k8s-worker-2
-#   ]
+# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+#   schema_id         = data.mso_schema.tf-hybrid-cloud.id
+#   # template_name     = data.mso_schema_template.tf-hc-prod.name
+#   template_name     = mso_schema_template.tf-k8s-aks.name
+#   anp_name          = mso_schema_template_anp.tf-aks-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
+#   contract_template_name = data.mso_schema_template.tf-hc-prod.name
+#   relationship_type = "provider"
 # }
-#
-# resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
-#   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-#   site_id       = data.mso_site.AZURE-MEL.id
-#   # template_name = data.mso_schema_template.tf-hc-prod.name
-#   template_name = mso_schema_template.tf-k8s-aks.name
-#   anp_name      = mso_schema_template_anp.tf-aks-1.name
-#   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
-#   name          = "tf-azure-sub-5"
-#   expressions {
-#     key         = "ipAddress"
-#     operator    = "equals"
-#     value       = "10.112.5.0/24"
+
+# ### Contracts ###
+# Configured by AWS K8S
+
+# resource "mso_schema_template_contract" "tf-inet-to-k8s" {
+#   schema_id               = data.mso_schema.tf-hybrid-cloud.id
+#   template_name           = data.mso_schema_template.tf-hc-prod.name
+#   # template_name           = mso_schema_template.tf-k8s-aks.name
+#   contract_name           = "tf-inet-to-k8s"
+#   display_name            = "Internet to K8S Workers"
+#   filter_type             = "bothWay"
+#   scope                   = "context"
+#   filter_relationships    = {
+#     # filter_schema_id      = mso_schema.tf-hybrid-cloud.id
+#     # filter_template_name  = mso_schema_template.tf-hc-prod.name
+#     filter_name           = data.mso_schema_template_filter_entry.tf-allow-any.name
 #   }
-#   depends_on = [
-#     mso_schema_template_deploy.azure_mel_before
-#   ]
+#   directives = ["none"]
 # }
-#
-# resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
-#   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-#   site_id       = data.mso_site.AZURE-MEL.id
-#   # template_name = data.mso_schema_template.tf-hc-prod.name
-#   template_name = mso_schema_template.tf-k8s-aks.name
-#   anp_name      = mso_schema_template_anp.tf-aks-1.name
-#   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
-#   name          = "tf-azure-sub-6"
-#   expressions {
-#     key         = "ipAddress"
-#     operator    = "equals"
-#     value       = "10.112.6.0/24"
-#   }
-#   depends_on = [
-#     mso_schema_template_deploy.azure_mel_before
-#   ]
-# }
-#
-# # ### Ex EPGs to Contracts ###
-# # Configured by AWS K8S
-#
-# # resource "mso_schema_template_external_epg_contract" "tf-public-1" {
-# #   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-# #   template_name     = data.mso_schema_template.tf-hc-prod.name
-# #   # template_name     = mso_schema_template.tf-k8s-aks.name
-# #   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-# #   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
-# #   relationship_type = "consumer"
-# # }
-#
-# ### App EPGs
-# resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
-#   schema_id                   = data.mso_schema.tf-hybrid-cloud.id
-#   # template_name = data.mso_schema_template.tf-hc-prod.name
-#   template_name               = mso_schema_template.tf-k8s-aks.name
-#   anp_name                    = mso_schema_template_anp.tf-aks-1.name
-#   name                        = "tf-k8s-worker"
-#   bd_name                     = "unspecified"
-#   vrf_name                    = data.mso_schema_template_vrf.tf-hc-prod.name
-#   vrf_template_name           = data.mso_schema_template.tf-hc-prod.name
-#   display_name                = "K8S Worker Node"
-# }
-#
-# ### App EPG to Contracts ###
-# # Configured by AWS K8S
-#
-# # - Need "contract_template_name"
-# #
-# # resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
-# #   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-# #   # template_name     = data.mso_schema_template.tf-hc-prod.name
-# #   template_name     = mso_schema_template.tf-k8s-aks.name
-# #   anp_name          = mso_schema_template_anp.tf-aks-1.name
-# #   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-# #   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
-# #   contract_template_name = data.mso_schema_template.tf-hc-prod.name
-# #   relationship_type = "consumer"
-# # }
-# #
-# # resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
-# #   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-# #   # template_name     = data.mso_schema_template.tf-hc-prod.name
-# #   template_name     = mso_schema_template.tf-k8s-aks.name
-# #   anp_name          = mso_schema_template_anp.tf-aks-1.name
-# #   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-# #   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-# #   contract_template_name = data.mso_schema_template.tf-hc-prod.name
-# #   relationship_type = "provider"
-# # }
-#
-# # ### Contracts ###
-# # Configured by AWS K8S
-#
-# # resource "mso_schema_template_contract" "tf-inet-to-k8s" {
-# #   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-# #   template_name           = data.mso_schema_template.tf-hc-prod.name
-# #   # template_name           = mso_schema_template.tf-k8s-aks.name
-# #   contract_name           = "tf-inet-to-k8s"
-# #   display_name            = "Internet to K8S Workers"
-# #   filter_type             = "bothWay"
-# #   scope                   = "context"
-# #   filter_relationships    = {
-# #     # filter_schema_id      = mso_schema.tf-hybrid-cloud.id
-# #     # filter_template_name  = mso_schema_template.tf-hc-prod.name
-# #     filter_name           = data.mso_schema_template_filter_entry.tf-allow-any.name
-# #   }
-# #   directives = ["none"]
-# # }
