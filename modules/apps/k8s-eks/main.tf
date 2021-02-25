@@ -137,7 +137,7 @@ resource "mso_schema_template" "tf-k8s-eks" {
 }
 
 ### Associated Template/Schema with Site
-resource "mso_schema_site" "tf-k8s-aks" {
+resource "mso_schema_site" "tf-k8s-eks" {
   schema_id       = data.mso_schema.tf-hybrid-cloud.id
   site_id         = data.mso_site.AWS-SYD.id
   template_name   = mso_schema_template.tf-k8s-eks.name
