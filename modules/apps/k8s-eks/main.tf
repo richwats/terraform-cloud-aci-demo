@@ -172,6 +172,9 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
   #   mso_schema_template_anp.tf-k8s-1
   # ]
+  depends_on = [
+    mso_schema_template_anp_epg.tf-k8s-worker
+  ]
 }
 
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
@@ -191,6 +194,9 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-2,
   #   mso_schema_template_anp.tf-k8s-1
   # ]
+  depends_on = [
+    mso_schema_template_anp_epg.tf-k8s-worker
+  ]
 }
 
 ### Ex EPGs to Contracts ###
@@ -210,7 +216,7 @@ resource "mso_schema_template_external_epg_contract" "tf-public-1" {
 resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   schema_id                   = data.mso_schema.tf-hybrid-cloud.id
   # template_name = data.mso_schema_template.tf-hc-prod.name
-  template_name = mso_schema_template.tf-k8s-eks.name
+  template_name               = mso_schema_template.tf-k8s-eks.name
   anp_name                    = mso_schema_template_anp.tf-k8s-1.name
   name                        = "tf-k8s-worker"
   bd_name                     = "unspecified"
