@@ -159,6 +159,8 @@ resource "mso_schema_template_anp" "tf-k8s-1" {
 
 Error: "Resource Not Found: AnpDelta with name tf-k8s-1 not found in List()"{}
 
+Issues with order??
+
 */
 
 ## Force Deploy to AWS ##
