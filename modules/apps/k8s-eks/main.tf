@@ -17,8 +17,10 @@ data "mso_site" "AWS-SYD" {
   name  = "AWS-SYD"
 }
 
-data "mso_site" "AZURE-MEL" {
-  name  = "AZURE-MEL"
+### Common Tenant ###
+data "mso_tenant" "production" {
+  name = "Production"
+  display_name = "Production"
 }
 
 ### Common Schema
@@ -100,7 +102,6 @@ data "mso_schema_site_vrf_region" "tf-hc-prod-aws-syd" {
   # depends_on = [mso_rest.vrf-workaround]
 }
 
-
 ## Create New Subnets for K8S Applciation
 resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
@@ -126,15 +127,23 @@ resource "mso_schema_site_vrf_region_cidr_subnet" "tf-hc-prod-aws-syd-2" {
   usage         = "EKS"
 }
 
+### New Template for AWS K8S (EKS) ###
+
+resource "mso_schema_template" "tf-k8s-eks" {
+  schema_id = data.mso_schema.tf-hybrid-cloud.id
+  name = "tf-eks"
+  display_name = "tf-eks"
+  tenant_id = data.mso_tenant.production
+}
 
 
 ### Application Network Profile ###
 resource "mso_schema_template_anp" "tf-k8s-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   # template      = data.mso_schema.tf-hybrid-cloud.template_name
-  template      = data.mso_schema_template.tf-hc-prod.name
+  template      = mso_schema_template.tf-k8s-eks.name
   name          = "tf-k8s-1"
-  display_name  = "Terraform K8S Demo 1"
+  display_name  = "Terraform K8S EKS Demo 1"
 }
 
 # ### AWS Site Specific Configuration
@@ -149,7 +158,8 @@ Only worked after manualy deployed???
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   site_id       = data.mso_site.AWS-SYD.id
-  template_name = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-eks.name
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
   name          = "tf-aws-sub-5"
@@ -167,7 +177,8 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   site_id       = data.mso_site.AWS-SYD.id
-  template_name = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-eks.name
   anp_name      = mso_schema_template_anp.tf-k8s-1.name
   epg_name      = mso_schema_template_anp_epg.tf-k8s-worker.name
   name          = "tf-aws-sub-6"
@@ -185,16 +196,21 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
 ### Ex EPGs to Contracts ###
 resource "mso_schema_template_external_epg_contract" "tf-public-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name     = mso_schema_template.tf-k8s-eks.name
   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
   external_epg_name = data.mso_schema_template_external_epg.tf-public.external_epg_name
   relationship_type = "consumer"
 }
 
 ### App EPGs
+# - Need to create Service EPG for AKS
+
+
 resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   schema_id                   = data.mso_schema.tf-hybrid-cloud.id
-  template_name               = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-eks.name
   anp_name                    = mso_schema_template_anp.tf-k8s-1.name
   name                        = "tf-k8s-worker"
   bd_name                     = "unspecified"
@@ -205,7 +221,8 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
 ### App EPG to Contracts ###
 resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-eks.name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
@@ -223,7 +240,8 @@ resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
 
 resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  template_name     = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name = mso_schema_template.tf-k8s-eks.name
   anp_name          = mso_schema_template_anp.tf-k8s-1.name
   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
@@ -233,8 +251,8 @@ resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
 ### Contracts ###
 resource "mso_schema_template_contract" "tf-inet-to-k8s" {
   schema_id               = data.mso_schema.tf-hybrid-cloud.id
-  # template_name           = data.mso_schema.tf-hybrid-cloud.template_name
-  template_name           = data.mso_schema_template.tf-hc-prod.name
+  # template_name = data.mso_schema_template.tf-hc-prod.name
+  template_name           = mso_schema_template.tf-k8s-eks.name
   contract_name           = "tf-inet-to-k8s"
   display_name            = "Internet to K8S Workers"
   filter_type             = "bothWay"

@@ -71,18 +71,27 @@ module "cloud-aci" {
   source = "./modules/mso"
 }
 
-module "app-k8s" {
-  source = "./modules/apps/k8s"
+module "app-k8s-eks" {
+  source = "./modules/apps/k8s-eks"
 
   # schema_prod = module.cloud-aci.aws-syd-prod-vrf
   depends_on = [module.cloud-aci]
 }
+
+# module "app-k8s-aks" {
+#   source = "./modules/apps/k8s-aks"
+#
+#   # schema_prod = module.cloud-aci.aws-syd-prod-vrf
+#   depends_on = [module.cloud-aci]
+# }
 
 # module "app-wordpress" {
 #   source = "./modules/apps/wordpress"
 # }
 
 ### TRIGGER DEPLOY
+# - Undeploy per Site
+# - Deploy across all sites!
 
 ## AWS
 resource "mso_schema_template_deploy" "aws_syd" {
@@ -95,7 +104,7 @@ resource "mso_schema_template_deploy" "aws_syd" {
 
   depends_on = [
     module.cloud-aci,
-    module.app-k8s,
+    module.app-k8s-eks,
   ]
 }
 #
