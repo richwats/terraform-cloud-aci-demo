@@ -162,6 +162,12 @@ Only worked after manualy deployed???
 
 */
 
+## Force Deploy to AWS ##
+resource "mso_schema_template_deploy" "aws_syd" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema_template.tf-k8s-eks.name
+}
+
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   site_id       = data.mso_site.AWS-SYD.id
@@ -180,7 +186,7 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   #   mso_schema_template_anp.tf-k8s-1
   # ]
   depends_on = [
-    mso_schema_template_anp_epg.tf-k8s-worker
+    mso_schema_template_deploy.aws_syd
   ]
 }
 
@@ -202,7 +208,7 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   #   mso_schema_template_anp.tf-k8s-1
   # ]
   depends_on = [
-    mso_schema_template_anp_epg.tf-k8s-worker
+    mso_schema_template_deploy.aws_syd
   ]
 }
 
