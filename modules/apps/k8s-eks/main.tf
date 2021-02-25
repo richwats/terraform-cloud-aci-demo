@@ -136,6 +136,13 @@ resource "mso_schema_template" "tf-k8s-eks" {
   tenant_id = data.mso_tenant.production.id
 }
 
+### Associated Template/Schema with Site
+resource "mso_schema_site" "foo_schema_site" {
+  schema_id       = data.mso_schema.tf-hybrid-cloud.id
+  site_id         = data.mso_site.AWS-SYD.id
+  template_name   = mso_schema_template.tf-k8s-eks.name
+}
+
 
 ### Application Network Profile ###
 resource "mso_schema_template_anp" "tf-k8s-1" {
