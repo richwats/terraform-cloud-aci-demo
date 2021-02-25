@@ -221,6 +221,7 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   name                        = "tf-k8s-worker"
   bd_name                     = "unspecified"
   vrf_name                    = data.mso_schema_template_vrf.tf-hc-prod.name
+  vrf_template_name           = data.mso_schema_template.tf-hc-prod.name
   display_name                = "K8S Worker Node"
 }
 
