@@ -239,35 +239,42 @@ resource "mso_schema_template_anp_epg" "tf-k8s-worker" {
   display_name                = "K8S Worker Node"
 }
 
-### App EPG to Contracts ###
-resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
-  schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name     = data.mso_schema_template.tf-hc-prod.name
-  template_name     = mso_schema_template.tf-k8s-eks.name
-  anp_name          = mso_schema_template_anp.tf-k8s-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
-  relationship_type = "consumer"
-}
+# ### App EPG to Contracts ###
 
-# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+/*
+Error: "Bad Request: Patch Failed, Received: The consumer contract tf-servers-to-inet on EPG 'K8S Worker Node' is invalid exception while trying to update schema"{}
+
+  on modules/apps/k8s-eks/main.tf line 243, in resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1":
+ 243: resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
+
+
+
+Error: "Bad Request: Patch Failed, Received: The provider contract tf-inet-to-k8s on EPG 'K8S Worker Node' is invalid exception while trying to update schema"{}
+
+  on modules/apps/k8s-eks/main.tf line 262, in resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2":
+ 262: resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+
+*/
+
+# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-1" {
 #   schema_id         = data.mso_schema.tf-hybrid-cloud.id
-#   template_name     = data.mso_schema_template.tf-hc-prod.name
+#   # template_name     = data.mso_schema_template.tf-hc-prod.name
+#   template_name     = mso_schema_template.tf-k8s-eks.name
 #   anp_name          = mso_schema_template_anp.tf-k8s-1.name
 #   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
 #   contract_name     = data.mso_schema_template_contract.tf-servers-to-inet.contract_name
+#   relationship_type = "consumer"
+# }
+#
+# resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
+#   schema_id         = data.mso_schema.tf-hybrid-cloud.id
+#   # template_name     = data.mso_schema_template.tf-hc-prod.name
+#   template_name     = mso_schema_template.tf-k8s-eks.name
+#   anp_name          = mso_schema_template_anp.tf-k8s-1.name
+#   epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
+#   contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
 #   relationship_type = "provider"
 # }
-
-resource "mso_schema_template_anp_epg_contract" "tf-k8s-worker-2" {
-  schema_id         = data.mso_schema.tf-hybrid-cloud.id
-  # template_name     = data.mso_schema_template.tf-hc-prod.name
-  template_name     = mso_schema_template.tf-k8s-eks.name
-  anp_name          = mso_schema_template_anp.tf-k8s-1.name
-  epg_name          = mso_schema_template_anp_epg.tf-k8s-worker.name
-  contract_name     = mso_schema_template_contract.tf-inet-to-k8s.contract_name
-  relationship_type = "provider"
-}
 
 ### Contracts ###
 resource "mso_schema_template_contract" "tf-inet-to-k8s" {
