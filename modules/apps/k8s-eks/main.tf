@@ -158,8 +158,6 @@ resource "mso_schema_template_anp" "tf-k8s-1" {
 /*
 
 Error: "Resource Not Found: AnpDelta with name tf-k8s-1 not found in List()"{}
-Only worked after manualy deployed???
-- Still fails after including deploy resource
 
 */
 
@@ -167,6 +165,11 @@ Only worked after manualy deployed???
 resource "mso_schema_template_deploy" "aws_syd" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
   template_name = mso_schema_template.tf-k8s-eks.name
+
+  depends_on = [
+    mso_schema_site_anp_epg_selector.tf-k8s-worker-1,
+    mso_schema_site_anp_epg_selector.tf-k8s-worker-2
+  ]
 }
 
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
@@ -186,9 +189,6 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-1,
   #   mso_schema_template_anp.tf-k8s-1
   # ]
-  depends_on = [
-    mso_schema_template_deploy.aws_syd
-  ]
 }
 
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
@@ -208,9 +208,6 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
   #   mso_schema_site_vrf_region_cidr_subnet.tf-hc-prod-aws-syd-2,
   #   mso_schema_template_anp.tf-k8s-1
   # ]
-  depends_on = [
-    mso_schema_template_deploy.aws_syd
-  ]
 }
 
 ### Ex EPGs to Contracts ###
