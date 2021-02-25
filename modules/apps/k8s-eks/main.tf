@@ -133,7 +133,7 @@ resource "mso_schema_template" "tf-k8s-eks" {
   schema_id = data.mso_schema.tf-hybrid-cloud.id
   name = "tf-eks"
   display_name = "tf-eks"
-  tenant_id = data.mso_tenant.production
+  tenant_id = data.mso_tenant.production.id
 }
 
 
