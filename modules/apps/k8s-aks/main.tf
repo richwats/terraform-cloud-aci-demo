@@ -156,19 +156,38 @@ resource "mso_schema_template_anp" "tf-aks-1" {
 # ### Azure Site Specific Configuration
 
 /*
+Error: "Resource Not Found: site with site ID : 5f3210753700005c07ce284e and template : tf-aks not found"{}
+
+  on modules/apps/k8s-aks/main.tf line 173, in resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1":
+ 173: resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
+
+
+
+Error: "Resource Not Found: site with site ID : 5f3210753700005c07ce284e and template : tf-aks not found"{}
+
+  on modules/apps/k8s-aks/main.tf line 188, in resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2":
+ 188: resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
+
+
+- Deploy First?
 
 */
 
-# ## Force Deploy to Azure ##
-# resource "mso_schema_template_deploy" "azure_mel" {
-#   schema_id     = data.mso_schema.tf-hybrid-cloud.id
-#   template_name = mso_schema_template.tf-k8s-aks.name
-#
-#   depends_on = [
-#     mso_schema_site_anp_epg_selector.tf-k8s-worker-1,
-#     mso_schema_site_anp_epg_selector.tf-k8s-worker-2
-#   ]
-# }
+## Force Deploy to Azure ##
+resource "mso_schema_template_deploy" "azure_mel_before" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema_template.tf-k8s-aks.name
+}
+
+resource "mso_schema_template_deploy" "azure_mel_after" {
+  schema_id     = data.mso_schema.tf-hybrid-cloud.id
+  template_name = mso_schema_template.tf-k8s-aks.name
+
+  depends_on = [
+    mso_schema_site_anp_epg_selector.tf-k8s-worker-1,
+    mso_schema_site_anp_epg_selector.tf-k8s-worker-2
+  ]
+}
 
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
   schema_id     = data.mso_schema.tf-hybrid-cloud.id
@@ -183,6 +202,9 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-1" {
     operator    = "equals"
     value       = "10.112.5.0/24"
   }
+  depends_on = [
+    mso_schema_template_deploy.azure_mel_before
+  ]
 }
 
 resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
@@ -198,6 +220,9 @@ resource "mso_schema_site_anp_epg_selector" "tf-k8s-worker-2" {
     operator    = "equals"
     value       = "10.112.6.0/24"
   }
+  depends_on = [
+    mso_schema_template_deploy.azure_mel_before
+  ]
 }
 
 # ### Ex EPGs to Contracts ###
