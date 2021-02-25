@@ -105,6 +105,7 @@ resource "mso_schema_template_deploy" "aws_syd" {
   depends_on = [
     module.cloud-aci,
     module.app-k8s-eks,
+    module.app-k8s-aks,
   ]
 }
 #
