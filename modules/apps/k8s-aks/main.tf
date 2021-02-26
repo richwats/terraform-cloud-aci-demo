@@ -302,6 +302,67 @@ epg": {
     }
   ]
 
+
+Worked??
+[
+  {
+    "op": "add",
+    "path": "/templates/tf-aks/anps/tf-aks-1/epgs/-",
+    "value":
+        {
+            "name": "TestSvcEPG2",
+            "displayName": "TestSvcEPG2",
+            "vrfRef": {
+                "schemaId": "6020c62c3a00001d0f5372e1",
+                "templateName": "tf-hc-prod",
+                "vrfName": "tf-hc-prod"
+            }
+        }
+  }
+]
+
+..Postman complains that selector requried at template or site level..
+
+{
+    "code": 400,
+    "message": "Bad Request: Patch Failed, Received: EP selectors should be defined either at template level or site level for service EPG 'TestSvcEPG2' in template 'tf-aks'. exception while trying to update schema"
+}
+
+[
+  {
+    "op": "add",
+    "path": "/templates/tf-aks/anps/tf-aks-1/epgs/-",
+    "value":
+        {
+            "name": "TestSvcEPG2",
+            "displayName": "TestSvcEPG2",
+            "vrfRef": {
+                "schemaId": "6020c62c3a00001d0f5372e1",
+                "templateName": "tf-hc-prod",
+                "vrfName": "tf-hc-prod"
+            },
+            "selectors": [
+                {
+                    "name": "AKS",
+                    "expressions": [
+                        {
+                            "key": "ipAddress",
+                            "operator": "equals",
+                            "value": "10.112.5.0/24"
+                        }
+                    ]
+                }
+            ],
+            "epgType": "service",
+            "cloudServiceEpgConfig": {
+                "serviceType": "Azure-AksCluster",
+                "deploymentType": "CloudNativeManaged",
+                "accessType": "PublicAndPrivate"
+            }
+        }
+  }
+]
+
 */
 
 
@@ -316,27 +377,23 @@ resource "mso_rest" "service-epg-workaround-azure" {
     "value":  {
       "name": "tf-svc-aks",
       "displayName": "tf-svc-aks",
-      "epgRef": {
-        "schemaId": "${data.mso_schema.tf-hybrid-cloud.id}",
-        "templateName": "${mso_schema_template.tf-k8s-aks.name}",
-        "anpName": "${mso_schema_template_anp.tf-aks-1.name}",
-        "epgName": "tf-svc-aks"
-      },
-      "contractRelationships": [],
-      "subnets": [],
-      "uSegEpg": false,
-      "uSegAttrs": [],
-      "intraEpg": "unenforced",
-      "prio": "unspecified",
-      "proxyArp": false,
-      "preferredGroup": false,
-      "bdRef": "",
       "vrfRef": {
         "schemaId": "${data.mso_schema.tf-hybrid-cloud.id}",
         "templateName": "${data.mso_schema_template.tf-hc-prod.name}",
         "vrfName": "${data.mso_schema_template_vrf.tf-hc-prod.name}"
       },
-      "selectors": [],
+      "selectors": [
+        {
+            "name": "AKS-Sub-5",
+            "expressions": [
+                {
+                    "key": "ipAddress",
+                    "operator": "equals",
+                    "value": "10.112.5.0/24"
+                }
+            ]
+        }
+      ],
       "epgType": "service",
       "cloudServiceEpgConfig": {
         "serviceType": "Azure-AksCluster",
