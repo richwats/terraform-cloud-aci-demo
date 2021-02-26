@@ -263,6 +263,45 @@ epg": {
     }
   }
 
+
+  [
+    {
+      "op": "add",
+      "path": "/templates/${mso_schema_template.tf-k8s-aks.name}/anps/${mso_schema_template_anp.tf-aks-1.name}/epgs/-",
+      "value":  {
+        "name": "tf-svc-aks",
+        "displayName": "tf-svc-aks",
+        "epgRef": {
+          "schemaId": "${data.mso_schema.tf-hybrid-cloud.id}",
+          "templateName": "${mso_schema_template.tf-k8s-aks.name}",
+          "anpName": "${mso_schema_template_anp.tf-aks-1.name}",
+          "epgName": "tf-svc-aks"
+        },
+        "contractRelationships": [],
+        "subnets": [],
+        "uSegEpg": false,
+        "uSegAttrs": [],
+        "intraEpg": "unenforced",
+        "prio": "unspecified",
+        "proxyArp": false,
+        "preferredGroup": false,
+        "bdRef": "",
+        "vrfRef": {
+          "schemaId": "${data.mso_schema.tf-hybrid-cloud.id}",
+          "templateName": "${data.mso_schema_template.tf-hc-prod.name}",
+          "vrfName": "${data.mso_schema_template_vrf.tf-hc-prod.name}"
+        },
+        "selectors": [],
+        "epgType": "service",
+        "cloudServiceEpgConfig": {
+          "serviceType": "Azure-AksCluster",
+          "deploymentType": "CloudNativeManaged",
+          "accessType": "PublicAndPrivate"
+        }
+      }
+    }
+  ]
+
 */
 
 
@@ -274,8 +313,7 @@ resource "mso_rest" "service-epg-workaround-azure" {
   {
     "op": "add",
     "path": "/templates/${mso_schema_template.tf-k8s-aks.name}/anps/${mso_schema_template_anp.tf-aks-1.name}/epgs/-",
-    "value":
-    {
+    "value":  {
       "name": "tf-svc-aks",
       "displayName": "tf-svc-aks",
       "epgRef": {
